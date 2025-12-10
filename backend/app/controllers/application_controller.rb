@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   # Everything response should be JSON
   include ActionController::MimeResponds
+  include Devise::Controllers::Helpers
   respond_to :json
 
   # Require a logged-in user for everything except Devise controllers
@@ -8,22 +9,20 @@ class ApplicationController < ActionController::API
   # Allow extra Devise parameters
   before_action :configure_permitted_parameters, if: :devise_controller?
   # Set pre request globals
-  before_action :set_current_user_and_account
+  before_action :set_current_user_and_tenant, unless: :devise_controller?
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
   protected
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [ :first_name, :last_name, :tenant, :plan ])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :first_name, :last_name ])
   end
-
-
 
   private
 
-  def set_current_user_and_account
+  def set_current_user_and_tenant
     Current.user = current_user
-    Current.account = current_user&.account
+    Current.account = current_user&.tenant
   end
 
   def render_not_found

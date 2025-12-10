@@ -1,6 +1,6 @@
 class Tenant < ApplicationRecord
-  has_many :users, dependant: :destroy
+  has_many :users, dependent: :destroy
   belongs_to :plan
 
-  validate :name, presence: true
+  validates :name, presence: true
 end
