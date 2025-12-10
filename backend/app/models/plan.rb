@@ -2,7 +2,7 @@ class Plan < ApplicationRecord
   has_many :tenants, dependent: :restrict_with_exception
 
   validates :name, presence: true, uniqueness: true
-  validate :price_cents, presence: true
+  validates :price, presence: true
 
 
   def free?

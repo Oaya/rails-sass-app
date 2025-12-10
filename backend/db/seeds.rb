@@ -7,3 +7,25 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+#   Seed for plans
+#   
+plans = [
+  {
+    name: "free",
+    price: 0,
+    features: {
+      project_number: "1"
+    }
+  },
+  {
+    name: "premium",
+    price: 10,
+    features: {
+      project_number: "unlimited"
+    }
+  }
+]
+
+plans.each do | plan|
+  Plan.create!(name: plan[:name], price: plan[:price], features: plan[:features])
+end
