@@ -9,7 +9,8 @@ Rails.application.routes.draw do
              controllers: {
               sessions: "api/users/sessions",
               registrations: "api/users/registrations",
-              confirmations: "api/confirmations"
+              confirmations: "api/confirmations",
+              passwords: "api/users/passwords"
             }
   end
 end
