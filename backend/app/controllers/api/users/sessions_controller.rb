@@ -19,14 +19,14 @@ module Api
 
           render json: {
             user: {
-              id:         user.id,
-              email:      user.email,
+              id: user.id,
+              email: user.email,
               first_name: user.first_name,
-              last_name:  user.last_name,
-              is_admin:   user.is_admin,
+              last_name: user.last_name,
+              is_admin: user.is_admin,
               tenant: user.tenant ? {
-                id:   user.tenant.id,
-                plan: user.tenant.plan ? user.tenant.plan.id : nil
+                id: user.tenant.id,
+                plan: user.tenant.plan ? user.tenant.plan.name : nil
               } : nil
             }
           }, status: :ok
