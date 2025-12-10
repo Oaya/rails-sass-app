@@ -17,9 +17,8 @@ class SignUpWithTenant
             raise ActiveRecord::RecordInvalid.new(Plan.new), "Invalid plan"
           end
 
-            @tenant = Tenant.create!(name: @tenant_params[:tenant], plan_id: plan.id)
-            @user = User.new(@user_params)
-            @user.tenant = @tenant
+            @tenant = Tenant.create!(name: @tenant_params[:name], plan_id: plan.id)
+            @user = User.new(@user_params.merge({is_admin: true, tenant: @tenant }))
             @user.save!
           end
           true

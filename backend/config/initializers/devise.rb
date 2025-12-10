@@ -318,17 +318,21 @@ Devise.setup do |config|
 
     # Which requests should create/send a JWT
     jwt.dispatch_requests = [
-      ['POST', %r{^/users/sign_in$}],
+      ['POST', %r{^/api/users/sign_in$}],
       # optionally, also issue token on signup:
       # ['POST', %r{^/users$}],
     ]
 
     # Which requests should revoke JWTs (if using a revocation strategy)
     jwt.revocation_requests = [
-      ['DELETE', %r{^/users/sign_out$}],
+      ['DELETE', %r{^/api/users/sign_out$}],
     ]
 
     # How long tokens are valid
     jwt.expiration_time = 1.day.to_i
+
+    jwt.request_formats = {
+      user: [:json]
+    }
   end
 end

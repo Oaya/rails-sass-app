@@ -8,7 +8,8 @@ Rails.application.routes.draw do
              defaults: { format: :json },
              controllers: {
               sessions: "api/users/sessions",
-              registrations: "api/users/registrations"
-             }
+              registrations: "api/users/registrations",
+              confirmations: "api/confirmations"
+            }
   end
 end

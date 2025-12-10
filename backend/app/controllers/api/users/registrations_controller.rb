@@ -41,7 +41,7 @@ module Api
       private
 
       def sign_up_params
-        params.permit(
+        params.require(:user).permit(
           :email,
           :password,
           :password_confirmation,
@@ -49,8 +49,9 @@ module Api
           :last_name
         )
       end
+      
       def tenant_params
-        params.permit(:tenant, :plan)
+        params.require(:tenant).permit(:name, :plan)
       end
     end
   end
