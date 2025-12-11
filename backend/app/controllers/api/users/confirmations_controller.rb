@@ -42,11 +42,8 @@ module Api
             first_name: user.first_name,
             last_name: user.last_name,
             is_admin: user.is_admin,
-            tenant: user.tenant && {
-              id: user.tenant.id,
-              name: user.tenant.name,
-              plan: user.tenant.plan&.name
-            }
+            tenant_id: user.tenant?.id,
+            plan: user.tenant.plan&.name
           }
         }, status: :ok
       end

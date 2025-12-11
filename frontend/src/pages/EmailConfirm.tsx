@@ -1,29 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { confirmAndSignIn } from "../services/auth";
-
-// type ConfirmAndSignInResponse = {
-//   message: string;
-//   token: string;
-//   user: {
-//     id: string;
-//     email: string;
-//     first_name: string;
-//     last_name: string;
-//     is_admin: boolean;
-//     tenant?: {
-//       id: string;
-//       name: string;
-//       plan: string;
-//     } | null;
-//   };
-// };
+import { useAuth } from "../contexts/AuthContext";
 
 const EmailConfirmed = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const { confirmEmail } = useAuth();
 
   useEffect(() => {
     const confirmSignIn = async () => {
@@ -41,29 +25,22 @@ const EmailConfirmed = () => {
           setError(errorMessage);
         }
 
-        const res = await confirmAndSignIn(confirmationToken);
+        const res = await confirmEmail(confirmationToken);
 
-        console.log(res);
+        setMessage(
+          res.data.message || "Email confirmed and signed in successfully.",
+        );
 
-        if (res.success && res.data) {
-          // store JWT
-          localStorage.setItem("jwt", res.data.token);
-
-          setMessage(
-            res.data.message || "Email confirmed and signed in successfully.",
-          );
-
-          setTimeout(() => {
-            navigate("/"); // or "/dashboard"
-          }, 2000);
-        }
+        setTimeout(() => {
+          navigate("/"); // or "/dashboard"
+        }, 100000);
       } catch (err) {
         setError((err as Error).message);
       }
     };
 
     confirmSignIn();
-  }, [searchParams, navigate]);
+  }, [searchParams, navigate, confirmEmail]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
