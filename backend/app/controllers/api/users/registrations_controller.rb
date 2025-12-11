@@ -13,8 +13,7 @@ module Api
 
         if exists_user
           if exists_user.confirmed?
-            render json: { error: "Cannot register this email" },
-                   status: :unprocessable_entity
+            render_error("Cannot register this email", :unprocessable_entity)
           else
             exists_user.send_confirmation_instructions
             render json: { message: "We sent the confirmation email" },
@@ -33,6 +32,7 @@ module Api
             message: "Signed up successfully, please check your email to confirm your account"
           }, status: :created
         else
+          render_error(service.error_message, :unprocessable_entity)
           render json: { error: service.error_message },
                  status: :unprocessable_entity
         end

@@ -8,8 +8,8 @@ module Api
         password = params.dig(:user, :password)
 
         unless email.present? && password.present?
-          return render json: { error: "Email and password are required" },
-                        status: :unprocessable_entity
+
+          return render_error("Email and password are required", :unprocessable_entity)
         end
 
         user = User.find_for_database_authentication(email: email)
@@ -31,7 +31,7 @@ module Api
             }
           }, status: :ok
         else
-          render json: { error: "Invalid email or password" }, status: :unauthorized
+          render_error("Invalid email or password", :unauthorized) 
         end
       end
     end

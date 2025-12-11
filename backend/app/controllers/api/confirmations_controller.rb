@@ -10,8 +10,7 @@ module Api
       if resource.errors.empty?
         render json: { message: "Email confirmed successfully." }, status: :ok
       else
-        render json: { error: resource.errors.full_messages.join(", ") },
-               status: :unprocessable_entity
+        render_error(resource.errors.full_messages.join(", "), :unprocessable_entity)
       end
     end
   end

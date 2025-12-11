@@ -1,24 +1,34 @@
 import { NavLink } from "react-router-dom";
+import type { Plan } from "../../pages/Home";
 
-function PlanCard() {
+function PlanCard({ plan }: { plan: Plan }) {
+  const projectNum = plan.features.project_number; // "1" or "unlimited"
+  const isUnlimited = projectNum === "unlimited";
+
   return (
-    <div>
-      <div className="bg-neutral-primary-soft border-default rounded-base block max-w-sm border p-6 shadow-xs">
-        <h5 className="text-heading mb-3 text-2xl leading-8 font-semibold tracking-tight">
-          Plan Name
+    <div className="text-left">
+      <div className="border-default block w-60 rounded border border-gray-200 p-6 shadow-md">
+        <h5 className="text-heading mb-3 text-3xl leading-8 font-semibold tracking-tight capitalize">
+          {plan.name} Plan
         </h5>
-        <ul className="text-body mb-6">
+
+        <ul className="text-body mb-6 list-disc pl-5">
           <li>Unlimited file uploads</li>
           <li>Responsive design</li>
           <li>Access anywhere</li>
-          <li> project</li>
+
+          <li className={isUnlimited ? "text-green-600" : "text-black"}>
+            {projectNum} {projectNum === "1" ? "project" : "projects"}
+          </li>
         </ul>
 
-        <p>Price</p>
+        <p className="text-xl font-bold">
+          Price: {plan.price === "0" ? "Free" : `$ ${plan.price}`}
+        </p>
 
         <NavLink
           to="/signup"
-          className="bg-brand hover:bg-brand-strong focus:ring-brand-medium rounded-base box-border inline-flex items-center border border-transparent px-4 py-2.5 text-sm leading-5 font-medium text-white shadow-xs focus:ring-4 focus:outline-none"
+          className="bg-pink mt-2 box-border inline-flex items-center rounded border border-transparent px-4 py-2.5 text-sm leading-5 font-medium text-white shadow-xs focus:ring-4 focus:outline-none"
         >
           Sign Up
         </NavLink>

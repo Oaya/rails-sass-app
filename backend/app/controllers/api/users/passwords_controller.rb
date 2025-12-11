@@ -7,7 +7,7 @@ module Api
         email = resource_params[:email].to_s.downcase
 
         if email.blank? 
-          return render json: {error: "Email is required"}, status: :unprocessable_entity
+          return render_error("Email is required", :unprocessable_entity)
         end
 
         self.resource = resource_class.send_reset_password_instructions(resource_params)
@@ -18,7 +18,7 @@ module Api
             message: "If that email exists in our system, you will receive password reset instructions shortly."}, status: :ok
         else
           # Usually validation errors such as invalid email format
-          render json: { error: resource.errors.full_messages.join(" ") }, status: :unprocessable_entity
+          render_error(resource.errors.full_messages.join(", "), :unprocessable_entity)
         end
       end
 

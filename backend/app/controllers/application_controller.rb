@@ -11,7 +11,9 @@ class ApplicationController < ActionController::API
   # Set pre request globals
   before_action :set_current_user_and_tenant, unless: :devise_controller?
 
-  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+  rescue_from ActiveRecord::RecordNotFound do
+    render_error("Not found", :not_found)
+  end
 
   protected
   def configure_permitted_parameters
@@ -25,7 +27,8 @@ class ApplicationController < ActionController::API
     Current.account = current_user&.tenant
   end
 
-  def render_not_found
-    render json: { error: "Not found" }, status: :not_found
+  def render_error(message, status = :unprocessable_entity)
+    render json: { error: message }, status: status
   end
+
 end

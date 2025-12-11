@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-
-
   # API routes
   namespace :api do
       # Devise routes for JSON API
@@ -12,5 +10,7 @@ Rails.application.routes.draw do
               confirmations: "api/confirmations",
               passwords: "api/users/passwords"
             }
+
+      get "plans", to: "plans#index"
   end
 end
