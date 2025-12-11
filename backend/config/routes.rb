@@ -12,5 +12,6 @@ Rails.application.routes.draw do
             }
 
       get "plans", to: "plans#index"
+      post "users/confirm_signin", to: "users/confirmations#confirm_signin"
   end
 end

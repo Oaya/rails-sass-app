@@ -26,7 +26,7 @@ const Home = () => {
     };
 
     fetchPlans();
-  }, []); // run once on mount
+  }, []);
 
   return (
     <div className="px-30 py-20 text-center">

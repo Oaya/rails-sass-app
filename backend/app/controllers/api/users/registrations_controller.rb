@@ -9,8 +9,6 @@ module Api
         # check the user exists or not with the email
         exists_user = User.find_by(email: email)
 
-        print exists_user
-
         if exists_user
           if exists_user.confirmed?
             render_error("Cannot register this email", :unprocessable_entity)
@@ -33,8 +31,6 @@ module Api
           }, status: :created
         else
           render_error(service.error_message, :unprocessable_entity)
-          render json: { error: service.error_message },
-                 status: :unprocessable_entity
         end
       end
 

@@ -1,20 +1,23 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import type { LoginUser } from "../types/auth";
 
 const Login = () => {
   const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = emailRef.current?.value;
-    const password = passwordRef.current?.value;
 
-    if (email && password) {
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const data = Object.fromEntries(formData.entries());
+    console.log(data);
+
+    if (data.email && data.password) {
       try {
-        await login({ email, password });
+        await login(data as LoginUser);
 
         //TODO :redirect to user page?
       } catch (err) {
@@ -36,7 +39,6 @@ const Login = () => {
           <input
             type="email"
             name="email"
-            ref={emailRef}
             onChange={() => setError(null)}
             required
             className="mb-5 w-full rounded border border-gray-300 bg-white px-8 py-5 shadow-md"
@@ -48,7 +50,6 @@ const Login = () => {
           <input
             type="password"
             name="password"
-            ref={passwordRef}
             onChange={() => setError(null)}
             required
             className="mb-5 w-full rounded border border-gray-300 bg-white px-8 py-5 shadow-md"

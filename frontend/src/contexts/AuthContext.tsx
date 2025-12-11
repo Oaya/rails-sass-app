@@ -1,39 +1,32 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { loginRequest } from "../services/auth";
-
-export type User = {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  is_admin: boolean;
-  tenant_id: string;
-  plan: string;
-};
-
-export type LoginUser = {
-  password: string;
-  email: string;
-};
+import { loginRequest, signupRequest } from "../services/auth";
+import type { LoginUser, SignupUser, User } from "../types/auth";
 
 const AuthContext = createContext<{
   user: User | null;
-  login: (user: LoginUser) => Promise<void>;
+  login: (userData: LoginUser) => Promise<void>;
+  signup: (userData: SignupUser) => Promise<ApiResponse>;
 }>({
   user: null,
   login: async () => {},
+  signup: async () => ({ success: true }),
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
-  async function login(user: LoginUser) {
-    const loggedInUser = await loginRequest(user);
-    setUser(loggedInUser);
+  async function login(userData: LoginUser) {
+    const res = await loginRequest(userData);
+    setUser(res.data);
+  }
+
+  async function signup(user: SignupUser) {
+    const res = await signupRequest(user);
+    return res;
   }
 
   return (
-    <AuthContext.Provider value={{ user, login }}>
+    <AuthContext.Provider value={{ user, login, signup }}>
       {children}
     </AuthContext.Provider>
   );

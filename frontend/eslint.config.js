@@ -22,6 +22,7 @@ export default defineConfig([
     rules: {
       // completely disable it
       "react-refresh/only-export-components": "off",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
 ]);

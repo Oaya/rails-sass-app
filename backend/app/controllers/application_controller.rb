@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   # Everything response should be JSON
   include ActionController::MimeResponds
+  include ActionController::Redirecting
   include Devise::Controllers::Helpers
   respond_to :json
 
@@ -13,6 +14,15 @@ class ApplicationController < ActionController::API
 
   rescue_from ActiveRecord::RecordNotFound do
     render_error("Not found", :not_found)
+  end
+
+  rescue_from Net::SMTPUnknownError do |e|
+    Rails.logger.error("SMTP error: #{e.message}")
+    # You can tweak this message however you like
+    render_error(
+      "We’re currently unable to send confirmation emails. Please try again in a moment.",
+      :service_unavailable
+    )
   end
 
   protected

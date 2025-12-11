@@ -1,41 +1,75 @@
-import type { LoginUser, User } from "../contexts/AuthContext";
+import type { LoginUser, SignupUser, User } from "../types/auth";
+import axios from "axios";
 
-export async function loginRequest(user: LoginUser) {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/sign_in`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+export async function loginRequest(user: LoginUser): Promise<ApiResponse> {
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/users/sign_in`,
+      { user },
+    );
+
+    const data = res.data;
+
+    const authHeader = res.headers["authorization"];
+    const token = authHeader?.split(" ")[1];
+
+    if (!token) {
+      throw new Error("No token Error");
+    }
+
+    localStorage.setItem("jwt", token);
+
+    const loggedInUser: User = {
+      id: data.user.id,
+      email: data.user.email,
+      first_name: data.user.first_name,
+      last_name: data.user.last_name,
+      is_admin: data.user.is_admin,
+      tenant_id: data.user.tenant.id,
+      plan: data.user.tenant.plan,
+    };
+
+    return { success: true, data: loggedInUser };
+  } catch (err: any) {
+    throw new Error(`Login failed: ${err.response.data.error}`);
+  }
+}
+
+export async function signupRequest(user: SignupUser): Promise<ApiResponse> {
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/users`, {
       user: {
         email: user.email,
         password: user.password,
+        first_name: user.first_name,
+        last_name: user.last_name,
       },
-    }),
-  });
+      tenant: {
+        name: user.tenant,
+        plan: user.plan,
+      },
+    });
 
-  const data = await res.json();
+    const data = res.data;
 
-  if (data.error) {
-    throw new Error(`Login failed: ${data.error}`);
+    return { success: true, message: data.message };
+  } catch (err: any) {
+    throw new Error(`Signup failed: ${err.response.data.error}`);
   }
+}
 
-  //set the token in localStorage
-  const authHeader = res.headers.get("Authorization");
+export async function confirmAndSignIn(token: string): Promise<ApiResponse> {
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/users/confirm_signin`,
+      { confirmation_token: token },
+    );
 
-  const token = authHeader?.split(" ")[1];
+    const data = res.data;
+    console.log(data);
 
-  if (!token) throw new Error("No token Error");
-
-  localStorage.setItem("jwt", token);
-
-  const loggedInUser: User = {
-    id: data.user.id,
-    email: data.user.email,
-    first_name: data.user.first_name,
-    last_name: data.user.last_name,
-    is_admin: data.user.is_admin,
-    tenant_id: data.user.tenant.id,
-    plan: data.user.tenant.plan,
-  };
-
-  return loggedInUser;
+    return { success: true, data: res.data };
+  } catch (err: any) {
+    throw new Error(`Confirm Email failed: ${err.response.data.error}`);
+  }
 }
