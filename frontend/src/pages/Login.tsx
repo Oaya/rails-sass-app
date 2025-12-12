@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import type { LoginUser } from "../types/auth";
+import { NavLink } from "react-router-dom";
+import InputField from "../components/ui/inputField";
 
 const Login = () => {
   const { login } = useAuth();
@@ -13,7 +15,6 @@ const Login = () => {
     const formData = new FormData(form);
 
     const data = Object.fromEntries(formData.entries());
-    console.log(data);
 
     if (data.email && data.password) {
       try {
@@ -27,42 +28,46 @@ const Login = () => {
   };
 
   return (
-    <div className="m-10">
+    <div className="m-10 mx-auto w-150 text-2xl">
       <h2 className="pb-4 text-center text-5xl">Log In</h2>
-      {error && (
-        <p className="m-4 text-center text-2xl text-red-500">{error}</p>
-      )}
+      <div>
+        {error && (
+          <p className="m-4 text-center text-2xl text-red-500">{error}</p>
+        )}
+      </div>
 
-      <form onSubmit={handleLogin} className="mx-auto w-200 text-2xl">
-        <div className="mb-5">
-          <label className="mb-2 block font-bold">Email</label>
-          <input
-            type="email"
-            name="email"
-            onChange={() => setError(null)}
-            required
-            className="mb-5 w-full rounded border border-gray-300 bg-white px-8 py-5 shadow-md"
-          />
-        </div>
+      <form onSubmit={handleLogin} className="">
+        <InputField
+          label="Email"
+          name="email"
+          onChange={() => setError(null)}
+          required
+        />
 
-        <div className="mb-5">
-          <label className="mb-2 block font-bold">Password</label>
-          <input
-            type="password"
-            name="password"
-            onChange={() => setError(null)}
-            required
-            className="mb-5 w-full rounded border border-gray-300 bg-white px-8 py-5 shadow-md"
-          />
-        </div>
+        <InputField
+          label="password"
+          name="password"
+          type="password"
+          onChange={() => setError(null)}
+          required
+        />
 
         <button
           type="submit"
-          className="bg-pink w-full rounded px-8 py-5 text-center text-white"
+          className="bg-pink mb-2 w-full rounded px-6 py-3 text-center text-white"
         >
           Log In
         </button>
       </form>
+
+      <div className="flex flex-col text-xl">
+        <NavLink to="/forget-password" className="text-blue-600">
+          Forget Password?
+        </NavLink>
+        <NavLink to="/signup" className="text-blue-600">
+          Don't have account yet?
+        </NavLink>
+      </div>
     </div>
   );
 };

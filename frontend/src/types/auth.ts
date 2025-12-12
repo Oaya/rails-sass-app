@@ -21,20 +21,3 @@ export type SignupUser = {
   tenant: string;
   plan: string;
 };
-
-// type ConfirmAndSignInResponse = {
-//   message: string;
-//   token: string;
-//   user: {
-//     id: string;
-//     email: string;
-//     first_name: string;
-//     last_name: string;
-//     is_admin: boolean;
-//     tenant?: {
-//       id: string;
-//       name: string;
-//       plan: string;
-//     } | null;
-//   };
-// };

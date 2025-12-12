@@ -40,12 +40,11 @@ Rails.application.configure do
   # mailtrap Setting
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    user_name: Rails.application.credentials.dig(:mailtrap, :user_name),
-    password: Rails.application.credentials.dig(:mailtrap, :password),
-    address: "sandbox.smtp.mailtrap.io",
+    address: "in-v3.mailjet.com",
     port: 587,
+    user_name: Rails.application.credentials.dig(:mailjet, :api_key),
+    password: Rails.application.credentials.dig(:mailjet, :secret_key),
     authentication: :plain,
-    domain: "localhost",
     enable_starttls_auto: true
   }
 

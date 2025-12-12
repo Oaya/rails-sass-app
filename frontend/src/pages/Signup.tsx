@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import type { SignupUser } from "../types/auth";
+import { NavLink } from "react-router-dom";
+import InputField from "../components/ui/inputField";
 
 const Signup = () => {
   const { signup } = useAuth();
@@ -25,13 +27,10 @@ const Signup = () => {
     try {
       const res = await signup(data as SignupUser);
 
-      console.log("res", res);
-
       if (res.message) {
         setMessage(res.message);
       }
     } catch (err) {
-      console.log(err);
       setError((err as Error).message);
     }
   };
@@ -42,7 +41,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="m-10 mx-auto w-200 text-2xl">
+    <div className="m-10 mx-auto w-150 text-2xl">
       <h2 className="pb-4 text-center text-5xl">Sign up</h2>
 
       {error && <p className="my-4 text-left text-2xl text-red-500">{error}</p>}
@@ -51,77 +50,60 @@ const Signup = () => {
       )}
 
       <form onSubmit={handleSignup}>
-        <div className="mb-5">
-          <label className="mb-2 block font-bold">Email</label>
-          <input
-            type="email"
-            name="email"
-            onChange={clearState}
-            required
-            className="mb-5 w-full rounded border border-gray-300 bg-white px-8 py-5 shadow-md"
-          />
-        </div>
+        <InputField label="Email" name="email" onChange={clearState} required />
 
         <div className="grid grid-cols-2 gap-6">
-          <div className="group relative z-0 mb-5 w-full">
-            <label className="mb-2 block font-bold">First Name</label>
-            <input
-              type="text"
+          <div className="group relative z-0 mb-2 w-full">
+            <InputField
+              label="First Name"
               name="first_name"
               onChange={clearState}
               required
-              className="mb-5 w-full rounded border border-gray-300 bg-white p-3 px-8 py-5 shadow-md"
             />
           </div>
-          <div className="group relative z-0 mb-5 w-full">
-            <label className="mb-2 block font-bold">Last Name</label>
-            <input
-              type="text"
+          <div className="group relative z-0 mb-2 w-full">
+            <InputField
+              label="Last Name"
               name="last_name"
               onChange={clearState}
               required
-              className="mb-5 w-full rounded border border-gray-300 bg-white p-3 px-8 py-5 shadow-md"
             />
           </div>
         </div>
 
-        <div className="mb-5">
-          <label className="mb-2 block font-bold">Password</label>
-          <input
+        <div className="mb-2">
+          <InputField
             type="password"
+            label="Password"
             name="password"
             onChange={clearState}
             required
-            className="mb-5 w-full rounded border border-gray-300 bg-white px-8 py-5 shadow-md"
           />
         </div>
-        <div className="mb-5">
-          <label className="mb-2 block font-bold">Password confirmation</label>
-          <input
+        <div className="mb-2">
+          <InputField
             type="password"
+            label="Confirm Password"
             name="confirm_password"
             onChange={clearState}
             required
-            className="mb-5 w-full rounded border border-gray-300 bg-white px-8 py-5 shadow-md"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-6">
-          <div className="group relative z-0 mb-5 w-full">
-            <label className="mb-2 block font-bold">Organization</label>
-            <input
-              type="text"
+          <div className="group relative z-0 mb-2 w-full">
+            <InputField
+              label="Organization"
               name="tenant"
               onChange={clearState}
               required
-              className="mb-5 w-full rounded border border-gray-300 bg-white p-3 px-8 py-5 shadow-md"
             />
           </div>
-          <div className="group relative z-0 mb-5 w-full">
-            <label className="mb-2 block font-bold">Plan</label>
+          <div className="group relative z-0 mb-2 w-full">
+            <label className="mb-2 block text-xl font-bold">Plan</label>
             <select
               name="plan"
-              className="mb-5 w-full rounded border border-gray-300 bg-white p-3 px-8 py-5 shadow-md"
+              className="mb-2 w-full rounded border border-gray-300 bg-white p-3 px-6 py-3 shadow-md"
             >
               <option value="free">Free</option>
               <option value="premium">Premium</option>
@@ -131,10 +113,14 @@ const Signup = () => {
 
         <button
           type="submit"
-          className="bg-pink w-full rounded px-8 py-5 text-center text-white"
+          className="bg-pink mb-2 w-full rounded px-6 py-3 text-center text-white"
         >
           Sign up
         </button>
+
+        <NavLink to="/login" className="text-blue-600">
+          Already have an account?
+        </NavLink>
       </form>
     </div>
   );

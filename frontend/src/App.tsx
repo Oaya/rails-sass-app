@@ -5,6 +5,7 @@ import Login from "./pages//Login";
 import Header from "./components/layout/Header";
 import Signup from "./pages/Signup";
 import EmailConfirmed from "./pages/EmailConfirm";
+import ForgetPassword from "./pages/ForgetPassword";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path="email-confirmed" element={<EmailConfirmed />} />
+          <Route path="forget-password" element={<ForgetPassword />} />
         </Routes>
       </BrowserRouter>
     </>

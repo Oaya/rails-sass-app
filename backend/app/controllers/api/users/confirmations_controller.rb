@@ -42,7 +42,7 @@ module Api
             first_name: user.first_name,
             last_name: user.last_name,
             is_admin: user.is_admin,
-            tenant_id: user.tenant?.id,
+            tenant_id: user.tenant&.id,
             plan: user.tenant.plan&.name
           }
         }, status: :ok

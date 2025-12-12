@@ -22,6 +22,7 @@ const EmailConfirmed = () => {
         }
 
         if (errorMessage) {
+          setMessage(null);
           setError(errorMessage);
         }
 
@@ -32,10 +33,14 @@ const EmailConfirmed = () => {
         );
 
         setTimeout(() => {
-          navigate("/"); // or "/dashboard"
-        }, 100000);
+          navigate("/");
+        }, 10000);
       } catch (err) {
+        setMessage(null);
         setError((err as Error).message);
+        setTimeout(() => {
+          navigate("/login");
+        }, 10000);
       }
     };
 

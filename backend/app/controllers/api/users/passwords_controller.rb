@@ -15,11 +15,17 @@ module Api
         # For security, don't reveal whether the email exists
         if successfully_sent?(resource)
           render json: {
-            message: "If that email exists in our system, you will receive password reset instructions shortly."}, status: :ok
+            message: "If that email exists in our system, you will receive password reset instructions shortly." }, status: :ok
         else
           # Usually validation errors such as invalid email format
           render_error(resource.errors.full_messages.join(", "), :unprocessable_entity)
         end
+      end
+
+      def edit 
+        token = params[:reset_password_token]
+        frontend_base = Rails.application.credentials.frontend_url
+        redirect_to "#{frontend_base}/reset-password?reset_password_token=#{token}"
       end
 
       private
@@ -28,5 +34,9 @@ module Api
          params.require(:user).permit(:email)
        end
     end
+
+
+
+
   end
 end

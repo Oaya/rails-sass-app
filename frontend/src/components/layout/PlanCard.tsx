@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import type { Plan } from "../../pages/Home";
+import type { Plan } from "../../types/plan";
 
 function PlanCard({ plan }: { plan: Plan }) {
   const projectNum = plan.features.project_number; // "1" or "unlimited"

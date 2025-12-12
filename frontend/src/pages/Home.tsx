@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 import PlanCard from "../components/layout/PlanCard";
 import { getPlans } from "../services/plans";
-
-export type Plan = {
-  id: string;
-  name: string;
-  features: {
-    project_number: string;
-  };
-  price: string;
-};
+import type { Plan } from "../types/plan";
 
 const Home = () => {
   const [error, setError] = useState<string | null>(null);

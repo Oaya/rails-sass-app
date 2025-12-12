@@ -66,9 +66,27 @@ export async function confirmAndSignIn(token: string): Promise<ApiResponse> {
     );
 
     const data = res.data;
-    console.log(data);
 
-    return { success: true, data: res.data };
+    return { success: true, data };
+  } catch (err: any) {
+    throw new Error(`Confirm Email failed: ${err.response.data.error}`);
+  }
+}
+
+export async function resetPasswordRequest(
+  email: string,
+): Promise<ApiResponse> {
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/users/password`,
+      {
+        user: { email },
+      },
+    );
+
+    const data = res.data;
+
+    return { success: true, data };
   } catch (err: any) {
     throw new Error(`Confirm Email failed: ${err.response.data.error}`);
   }
