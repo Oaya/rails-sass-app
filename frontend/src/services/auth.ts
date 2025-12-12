@@ -1,4 +1,9 @@
-import type { LoginUser, SignupUser, User } from "../types/auth";
+import type {
+  LoginUser,
+  SignupUser,
+  UpdatePasswordUser,
+  User,
+} from "../types/auth";
 import axios from "axios";
 
 export async function loginRequest(user: LoginUser): Promise<ApiResponse> {
@@ -73,7 +78,7 @@ export async function confirmAndSignIn(token: string): Promise<ApiResponse> {
   }
 }
 
-export async function resetPasswordRequest(
+export async function resetPasswordEmailRequest(
   email: string,
 ): Promise<ApiResponse> {
   try {
@@ -82,6 +87,23 @@ export async function resetPasswordRequest(
       {
         user: { email },
       },
+    );
+
+    const data = res.data;
+
+    return { success: true, data };
+  } catch (err: any) {
+    throw new Error(`Error: ${err.response.data.error}`);
+  }
+}
+
+export async function updatePasswordRequest(
+  user: UpdatePasswordUser,
+): Promise<ApiResponse> {
+  try {
+    const res = await axios.patch(
+      `${import.meta.env.VITE_API_URL}/api/users/password`,
+      { user },
     );
 
     const data = res.data;

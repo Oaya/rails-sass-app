@@ -319,7 +319,8 @@ Devise.setup do |config|
     # Which requests should create/send a JWT
     jwt.dispatch_requests = [
       ['POST', %r{^/api/users/sign_in$}],
-      ['POST', %r{^/api/users/confirm_signin$}]
+      ['POST', %r{^/api/users/confirm_signin$}],
+      ['PATCH',  %r{^/api/users/password$}]
       # optionally, also issue token on signup:
       # ['POST', %r{^/users$}],
     ]

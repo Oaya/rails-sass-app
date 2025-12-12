@@ -9,17 +9,24 @@ import {
 import {
   confirmAndSignIn,
   loginRequest,
-  resetPasswordRequest,
+  resetPasswordEmailRequest,
   signupRequest,
+  updatePasswordRequest,
 } from "../services/auth";
-import type { LoginUser, SignupUser, User } from "../types/auth";
+import type {
+  LoginUser,
+  SignupUser,
+  UpdatePasswordUser,
+  User,
+} from "../types/auth";
 
 type AuthContextType = {
   user: User | null;
   login: (userData: LoginUser) => Promise<void>;
   signup: (userData: SignupUser) => Promise<ApiResponse>;
   confirmEmail: (token: string) => Promise<ApiResponse>;
-  resetPassword: (email: string) => Promise<ApiResponse>;
+  sendResetPasswordEmail: (email: string) => Promise<ApiResponse>;
+  updatePassword: (data: UpdatePasswordUser) => Promise<ApiResponse>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -27,7 +34,8 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   signup: async () => ({ success: true }),
   confirmEmail: async () => ({ success: true }),
-  resetPassword: async () => ({ success: true }),
+  sendResetPasswordEmail: async () => ({ success: true }),
+  updatePassword: async () => ({ success: true }),
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -54,9 +62,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return res;
   }, []);
 
-  const resetPassword = useCallback(async (email: string) => {
-    const res = await resetPasswordRequest(email);
+  const sendResetPasswordEmail = useCallback(async (email: string) => {
+    const res = await resetPasswordEmailRequest(email);
 
+    return res;
+  }, []);
+
+  const updatePassword = useCallback(async (data: UpdatePasswordUser) => {
+    const res = await updatePasswordRequest(data);
+
+    if (res.success && res.data) {
+      localStorage.setItem("jwt", res.data.token);
+      setUser(res.data.user);
+    }
     return res;
   }, []);
 
@@ -66,9 +84,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       signup,
       confirmEmail,
-      resetPassword,
+      sendResetPasswordEmail,
+      updatePassword,
     }),
-    [user, login, signup, confirmEmail, resetPassword],
+    [user, login, signup, confirmEmail, sendResetPasswordEmail, updatePassword],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

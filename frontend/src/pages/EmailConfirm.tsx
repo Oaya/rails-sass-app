@@ -19,7 +19,7 @@ const EmailConfirmed = () => {
         const errorMessage = searchParams.get("error");
 
         if (!confirmationToken) {
-          setError("Invalid confirmation link. Missing confirmation token.");
+          setError("Invalid confirmation link");
           return;
         }
 

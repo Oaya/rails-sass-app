@@ -21,3 +21,9 @@ export type SignupUser = {
   tenant: string;
   plan: string;
 };
+
+export type UpdatePasswordUser = {
+  reset_password_token: string;
+  password: string;
+  password_confirmation: string;
+};
