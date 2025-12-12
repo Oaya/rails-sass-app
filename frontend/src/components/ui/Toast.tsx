@@ -18,7 +18,7 @@ const Toast = ({ message, type }: Props) => {
   return (
     <div className="flex h-20 items-center">
       <div
-        className={`text-body flex w-full items-center rounded p-2 shadow-xs transition-opacity duration-200 ${colorClasses} ${
+        className={`text-body flex w-100 items-center rounded p-2 shadow-xs transition-opacity duration-200 ${colorClasses} ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         role="alert"

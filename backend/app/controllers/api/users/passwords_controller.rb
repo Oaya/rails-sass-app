@@ -14,8 +14,7 @@ module Api
 
         # For security, don't reveal whether the email exists
         if successfully_sent?(resource)
-          render json: {
-            message: "If that email exists in our system, you will receive password reset instructions shortly." }, status: :ok
+          render status: :ok
         else
           # Usually validation errors such as invalid email format
           render_error(resource.errors.full_messages.join(", "), :unprocessable_entity)

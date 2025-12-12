@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import InputField from "../components/ui/inputField";
 import Toast from "../components/ui/Toast";
@@ -9,6 +9,7 @@ const ResetPassword = () => {
   const { updatePassword } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handlePasswordReset = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,7 +19,6 @@ const ResetPassword = () => {
     const formData = new FormData(form);
 
     const data = Object.fromEntries(formData.entries());
-    console.log(data);
 
     if (data.password !== data.confirm_password) {
       setError("Password and Confirm password should match");
@@ -29,6 +29,10 @@ const ResetPassword = () => {
 
     if (!resetToken) {
       setError("Invalid reset Password link.");
+      setTimeout(() => {
+        setError(null);
+        navigate("/forget-password");
+      }, 10000);
       return;
     }
 
@@ -38,11 +42,19 @@ const ResetPassword = () => {
         password: data.password as string,
         password_confirmation: data.confirm_password as string,
       });
+
       if (res.data.message) {
         setMessage(res.data.message);
+        setTimeout(() => {
+          navigate("/login");
+        }, 10000);
       }
     } catch (err) {
       setError((err as Error).message);
+      setTimeout(() => {
+        setError(null);
+        navigate("/forget-password");
+      }, 10000);
     }
   };
 

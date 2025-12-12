@@ -20,10 +20,10 @@ const ForgetPassword = () => {
 
     if (data.email) {
       try {
-        const res = await sendResetPasswordEmail(data.email as string);
-        if (res.data.message) {
-          setMessage(res.data.message);
-        }
+        await sendResetPasswordEmail(data.email as string);
+        setMessage(
+          "If that email exists in our system, you will receive password reset instructions shortly.",
+        );
       } catch (err) {
         setError((err as Error).message);
       }
