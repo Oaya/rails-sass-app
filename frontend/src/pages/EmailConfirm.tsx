@@ -5,14 +5,16 @@ import { useAuth } from "../contexts/AuthContext";
 const EmailConfirmed = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [hasConfirmed, setHasConfirmed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const { confirmEmail } = useAuth();
 
   useEffect(() => {
+    if (hasConfirmed) return;
+
     const confirmSignIn = async () => {
       try {
-        setMessage("Confirming your email...");
         const confirmationToken = searchParams.get("confirmation_token");
         const errorMessage = searchParams.get("error");
 
@@ -31,6 +33,7 @@ const EmailConfirmed = () => {
         setMessage(
           res.data.message || "Email confirmed and signed in successfully.",
         );
+        setHasConfirmed(true);
 
         setTimeout(() => {
           navigate("/");
@@ -38,6 +41,7 @@ const EmailConfirmed = () => {
       } catch (err) {
         setMessage(null);
         setError((err as Error).message);
+        setHasConfirmed(true);
         setTimeout(() => {
           navigate("/login");
         }, 10000);
@@ -45,7 +49,8 @@ const EmailConfirmed = () => {
     };
 
     confirmSignIn();
-  }, [searchParams, navigate, confirmEmail]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, navigate, hasConfirmed]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">

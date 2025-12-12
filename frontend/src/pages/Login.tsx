@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import type { LoginUser } from "../types/auth";
 import { NavLink } from "react-router-dom";
 import InputField from "../components/ui/inputField";
+import Toast from "../components/ui/Toast";
 
 const Login = () => {
   const { login } = useAuth();
@@ -30,13 +31,12 @@ const Login = () => {
   return (
     <div className="m-10 mx-auto w-150 text-2xl">
       <h2 className="pb-4 text-center text-5xl">Log In</h2>
-      <div>
-        {error && (
-          <p className="m-4 text-center text-2xl text-red-500">{error}</p>
-        )}
+
+      <div className="fixed top-20 right-8 z-50 space-y-2">
+        {error && <Toast message={error} type="error" />}
       </div>
 
-      <form onSubmit={handleLogin} className="">
+      <form onSubmit={handleLogin}>
         <InputField
           label="Email"
           name="email"
@@ -45,7 +45,7 @@ const Login = () => {
         />
 
         <InputField
-          label="password"
+          label="Password"
           name="password"
           type="password"
           onChange={() => setError(null)}
@@ -54,7 +54,7 @@ const Login = () => {
 
         <button
           type="submit"
-          className="bg-pink mb-2 w-full rounded px-6 py-3 text-center text-white"
+          className="bg-pink my-2 w-full rounded px-6 py-3 text-center text-white"
         >
           Log In
         </button>
@@ -65,7 +65,7 @@ const Login = () => {
           Forget Password?
         </NavLink>
         <NavLink to="/signup" className="text-blue-600">
-          Don't have account yet?
+          Don&apos;t have account yet?
         </NavLink>
       </div>
     </div>

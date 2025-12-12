@@ -8,7 +8,7 @@ type Props = {
 const InputField = ({ label, name, ...rest }: Props) => {
   return (
     <div className="mb-2">
-      <label className="mb-2 block text-xl font-bold">{label}</label>
+      <label className="block text-lg font-bold">{label}</label>
       <input
         required
         name={name}

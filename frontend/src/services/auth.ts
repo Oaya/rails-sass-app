@@ -31,7 +31,7 @@ export async function loginRequest(user: LoginUser): Promise<ApiResponse> {
 
     return { success: true, data: loggedInUser };
   } catch (err: any) {
-    throw new Error(`Login failed: ${err.response.data.error}`);
+    throw new Error(`Error: ${err.response.data.error}`);
   }
 }
 
@@ -54,7 +54,7 @@ export async function signupRequest(user: SignupUser): Promise<ApiResponse> {
 
     return { success: true, message: data.message };
   } catch (err: any) {
-    throw new Error(`Signup failed: ${err.response.data.error}`);
+    throw new Error(`Error: ${err.response.data.error}`);
   }
 }
 
@@ -69,7 +69,7 @@ export async function confirmAndSignIn(token: string): Promise<ApiResponse> {
 
     return { success: true, data };
   } catch (err: any) {
-    throw new Error(`Confirm Email failed: ${err.response.data.error}`);
+    throw new Error(`Error: ${err.response.data.error}`);
   }
 }
 
@@ -88,6 +88,6 @@ export async function resetPasswordRequest(
 
     return { success: true, data };
   } catch (err: any) {
-    throw new Error(`Confirm Email failed: ${err.response.data.error}`);
+    throw new Error(`Error: ${err.response.data.error}`);
   }
 }

@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import type { SignupUser } from "../types/auth";
 import { NavLink } from "react-router-dom";
 import InputField from "../components/ui/inputField";
+import Toast from "../components/ui/Toast";
 
 const Signup = () => {
   const { signup } = useAuth();
@@ -44,16 +45,16 @@ const Signup = () => {
     <div className="m-10 mx-auto w-150 text-2xl">
       <h2 className="pb-4 text-center text-5xl">Sign up</h2>
 
-      {error && <p className="my-4 text-left text-2xl text-red-500">{error}</p>}
-      {message && (
-        <p className="my-4 text-left text-2xl text-green-500">{message}</p>
-      )}
+      <div className="fixed top-20 right-8 z-50 space-y-2">
+        {error && <Toast message={error} type="error" />}
+        {message && <Toast message={message} type="success" />}
+      </div>
 
       <form onSubmit={handleSignup}>
         <InputField label="Email" name="email" onChange={clearState} required />
 
         <div className="grid grid-cols-2 gap-6">
-          <div className="group relative z-0 mb-2 w-full">
+          <div className="group relative z-0 w-full">
             <InputField
               label="First Name"
               name="first_name"
@@ -61,7 +62,7 @@ const Signup = () => {
               required
             />
           </div>
-          <div className="group relative z-0 mb-2 w-full">
+          <div className="group relative z-0 w-full">
             <InputField
               label="Last Name"
               name="last_name"
@@ -71,27 +72,24 @@ const Signup = () => {
           </div>
         </div>
 
-        <div className="mb-2">
-          <InputField
-            type="password"
-            label="Password"
-            name="password"
-            onChange={clearState}
-            required
-          />
-        </div>
-        <div className="mb-2">
-          <InputField
-            type="password"
-            label="Confirm Password"
-            name="confirm_password"
-            onChange={clearState}
-            required
-          />
-        </div>
+        <InputField
+          type="password"
+          label="Password"
+          name="password"
+          onChange={clearState}
+          required
+        />
+
+        <InputField
+          type="password"
+          label="Confirm Password"
+          name="confirm_password"
+          onChange={clearState}
+          required
+        />
 
         <div className="grid grid-cols-2 gap-6">
-          <div className="group relative z-0 mb-2 w-full">
+          <div className="group relative z-0 w-full">
             <InputField
               label="Organization"
               name="tenant"
@@ -99,8 +97,8 @@ const Signup = () => {
               required
             />
           </div>
-          <div className="group relative z-0 mb-2 w-full">
-            <label className="mb-2 block text-xl font-bold">Plan</label>
+          <div className="group relative z-0 w-full">
+            <label className="block text-lg font-bold">Plan</label>
             <select
               name="plan"
               className="mb-2 w-full rounded border border-gray-300 bg-white p-3 px-6 py-3 shadow-md"
@@ -113,12 +111,12 @@ const Signup = () => {
 
         <button
           type="submit"
-          className="bg-pink mb-2 w-full rounded px-6 py-3 text-center text-white"
+          className="bg-pink w-full rounded px-6 py-3 text-center text-white"
         >
           Sign up
         </button>
 
-        <NavLink to="/login" className="text-blue-600">
+        <NavLink to="/login" className="text-xl text-blue-600">
           Already have an account?
         </NavLink>
       </form>

@@ -2,10 +2,12 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import InputField from "../components/ui/inputField";
+import Toast from "../components/ui/Toast";
 
 const ForgetPassword = () => {
   const { resetPassword } = useAuth();
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   const handlePasswordReset = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,7 +20,10 @@ const ForgetPassword = () => {
 
     if (data.email) {
       try {
-        await resetPassword(data.email as string);
+        const res = await resetPassword(data.email as string);
+        if (res.data.message) {
+          setMessage(res.data.message);
+        }
       } catch (err) {
         setError((err as Error).message);
       }
@@ -28,9 +33,10 @@ const ForgetPassword = () => {
   return (
     <div className="m-10 mx-auto w-150 text-2xl">
       <h2 className="pb-4 text-center text-5xl">Reset password</h2>
-      {error && (
-        <p className="m-4 text-center text-2xl text-red-500">{error}</p>
-      )}
+      <div className="fixed top-20 right-8 z-50 space-y-2">
+        {error && <Toast message={error} type="error" />}
+        {message && <Toast message={message} type="success" />}
+      </div>
 
       <form onSubmit={handlePasswordReset}>
         <InputField
@@ -42,7 +48,7 @@ const ForgetPassword = () => {
 
         <button
           type="submit"
-          className="bg-pink mb-2 w-full rounded px-6 py-3 text-center text-white"
+          className="bg-pink mt-2 mb-2 w-full rounded px-6 py-3 text-center text-white"
         >
           Reset Password
         </button>

@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+  type ReactNode,
+} from "react";
 import {
   confirmAndSignIn,
   loginRequest,
@@ -7,13 +14,15 @@ import {
 } from "../services/auth";
 import type { LoginUser, SignupUser, User } from "../types/auth";
 
-const AuthContext = createContext<{
+type AuthContextType = {
   user: User | null;
   login: (userData: LoginUser) => Promise<void>;
   signup: (userData: SignupUser) => Promise<ApiResponse>;
   confirmEmail: (token: string) => Promise<ApiResponse>;
   resetPassword: (email: string) => Promise<ApiResponse>;
-}>({
+};
+
+const AuthContext = createContext<AuthContextType>({
   user: null,
   login: async () => {},
   signup: async () => ({ success: true }),
@@ -24,17 +33,17 @@ const AuthContext = createContext<{
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
-  async function login(userData: LoginUser) {
+  const login = useCallback(async (userData: LoginUser) => {
     const res = await loginRequest(userData);
     setUser(res.data);
-  }
+  }, []);
 
-  async function signup(user: SignupUser) {
-    const res = await signupRequest(user);
+  const signup = useCallback(async (userData: SignupUser) => {
+    const res = await signupRequest(userData);
     return res;
-  }
+  }, []);
 
-  async function confirmEmail(token: string) {
+  const confirmEmail = useCallback(async (token: string) => {
     const res = await confirmAndSignIn(token);
 
     if (res.success && res.data) {
@@ -43,26 +52,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     return res;
-  }
+  }, []);
 
-  async function resetPassword(email: string) {
+  const resetPassword = useCallback(async (email: string) => {
     const res = await resetPasswordRequest(email);
 
-    if (res.success && res.data) {
-      localStorage.setItem("jwt", res.data.token);
-      setUser(res.data.user);
-    }
-
     return res;
-  }
+  }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{ user, login, signup, confirmEmail, resetPassword }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      user,
+      login,
+      signup,
+      confirmEmail,
+      resetPassword,
+    }),
+    [user, login, signup, confirmEmail, resetPassword],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
