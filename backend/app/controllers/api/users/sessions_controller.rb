@@ -18,6 +18,7 @@ module Api
           sign_in(resource_name, user)  # devise-jwt hooks here
 
           render json: {
+            message: "Successfully Logged in",
             user: {
               id: user.id,
               email: user.email,

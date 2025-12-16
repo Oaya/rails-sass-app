@@ -37,14 +37,14 @@ const EmailConfirmed = () => {
 
         setTimeout(() => {
           navigate("/");
-        }, 10000);
+        }, 5000);
       } catch (err) {
         setMessage(null);
         setError((err as Error).message);
         setHasConfirmed(true);
         setTimeout(() => {
           navigate("/login");
-        }, 10000);
+        }, 5000);
       }
     };
 

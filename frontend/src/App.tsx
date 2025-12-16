@@ -7,6 +7,15 @@ import Signup from "./pages/Signup";
 import EmailConfirmed from "./pages/EmailConfirm";
 import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
+import { useAuth } from "./contexts/AuthContext";
+import Welcome from "./pages/Welcome";
+
+function Root() {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) return null; // or spinner
+  return user ? <Home /> : <Welcome />;
+}
 
 function App() {
   return (
@@ -14,7 +23,7 @@ function App() {
       <BrowserRouter>
         <Header />
         <Routes>
-          <Route index element={<Home />} />
+          <Route path="/" element={<Root />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path="email-confirmed" element={<EmailConfirmed />} />

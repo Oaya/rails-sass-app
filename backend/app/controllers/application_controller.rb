@@ -3,7 +3,16 @@ class ApplicationController < ActionController::API
   include ActionController::MimeResponds
   include ActionController::Redirecting
   include Devise::Controllers::Helpers
+  include Devise::Controllers::SignInOut
   respond_to :json
+
+  def current_user
+    current_api_user
+  end
+
+  def authenticate_user!
+    authenticate_api_user!
+  end
 
   # Require a logged-in user for everything except Devise controllers
   before_action :authenticate_user!, unless: :devise_controller?
@@ -24,6 +33,7 @@ class ApplicationController < ActionController::API
       :service_unavailable
     )
   end
+
 
   protected
   def configure_permitted_parameters

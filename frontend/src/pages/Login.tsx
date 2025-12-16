@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import type { LoginUser } from "../types/auth";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import InputField from "../components/ui/inputField";
 import Toast from "../components/ui/Toast";
 
 const Login = () => {
   const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,9 +21,12 @@ const Login = () => {
 
     if (data.email && data.password) {
       try {
-        await login(data as LoginUser);
+        const res = await login(data as LoginUser);
 
-        //TODO :redirect to user page?
+        if (res.data.message) {
+          setMessage(res.data.message);
+          navigate("/");
+        }
       } catch (err) {
         setError((err as Error).message);
       }
@@ -34,6 +39,7 @@ const Login = () => {
 
       <div className="fixed top-20 right-8 z-50 space-y-2">
         {error && <Toast message={error} type="error" />}
+        {message && <Toast message={message} type="success" />}
       </div>
 
       <form onSubmit={handleLogin}>

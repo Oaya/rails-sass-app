@@ -6,7 +6,7 @@ declare global {
     success: boolean;
     message?: string;
     data?: any;
-    error?: AxiosError;
+    error?: AxiosError | string;
   }
 }
 

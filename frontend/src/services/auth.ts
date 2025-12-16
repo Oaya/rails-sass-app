@@ -1,9 +1,4 @@
-import type {
-  LoginUser,
-  SignupUser,
-  UpdatePasswordUser,
-  User,
-} from "../types/auth";
+import type { LoginUser, SignupUser, UpdatePasswordUser } from "../types/auth";
 import axios from "axios";
 
 export async function loginRequest(user: LoginUser): Promise<ApiResponse> {
@@ -12,6 +7,8 @@ export async function loginRequest(user: LoginUser): Promise<ApiResponse> {
       `${import.meta.env.VITE_API_URL}/api/users/sign_in`,
       { user },
     );
+
+    console.log("res headre", res.headers);
 
     const data = res.data;
 
@@ -22,19 +19,10 @@ export async function loginRequest(user: LoginUser): Promise<ApiResponse> {
       throw new Error("No token Error");
     }
 
+    //Store token
     localStorage.setItem("jwt", token);
 
-    const loggedInUser: User = {
-      id: data.user.id,
-      email: data.user.email,
-      first_name: data.user.first_name,
-      last_name: data.user.last_name,
-      is_admin: data.user.is_admin,
-      tenant_id: data.user.tenant.id,
-      plan: data.user.tenant.plan,
-    };
-
-    return { success: true, data: loggedInUser };
+    return { success: true, data };
   } catch (err: any) {
     throw new Error(`Error: ${err.response.data.error}`);
   }
@@ -54,6 +42,7 @@ export async function signupRequest(user: SignupUser): Promise<ApiResponse> {
         plan: user.plan,
       },
     });
+    console.log("res headre", res.headers);
 
     const data = res.data;
 
@@ -63,12 +52,33 @@ export async function signupRequest(user: SignupUser): Promise<ApiResponse> {
   }
 }
 
+export async function getAuthUserRequest(): Promise<ApiResponse> {
+  try {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      return { success: false, error: "No token" };
+    }
+
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/me`, {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return { success: true, data: res.data };
+  } catch (err: any) {
+    throw new Error(err.response?.data?.error || "Failed to get Auth user");
+  }
+}
+
 export async function confirmAndSignIn(token: string): Promise<ApiResponse> {
   try {
     const res = await axios.post(
       `${import.meta.env.VITE_API_URL}/api/users/confirm_signin`,
       { confirmation_token: token },
     );
+    console.log("res headre", res.headers);
 
     const data = res.data;
 
@@ -88,6 +98,7 @@ export async function resetPasswordEmailRequest(
         user: { email },
       },
     );
+    console.log("res headre", res.headers);
 
     const data = res.data;
 
@@ -105,6 +116,8 @@ export async function updatePasswordRequest(
       `${import.meta.env.VITE_API_URL}/api/users/password`,
       { user },
     );
+
+    console.log("res headre", res.headers);
 
     const data = res.data;
 

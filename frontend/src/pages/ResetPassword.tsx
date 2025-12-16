@@ -32,7 +32,7 @@ const ResetPassword = () => {
       setTimeout(() => {
         setError(null);
         navigate("/forget-password");
-      }, 10000);
+      }, 5000);
       return;
     }
 
@@ -47,14 +47,14 @@ const ResetPassword = () => {
         setMessage(res.data.message);
         setTimeout(() => {
           navigate("/login");
-        }, 10000);
+        }, 5000);
       }
     } catch (err) {
       setError((err as Error).message);
       setTimeout(() => {
         setError(null);
         navigate("/forget-password");
-      }, 10000);
+      }, 5000);
     }
   };
 
