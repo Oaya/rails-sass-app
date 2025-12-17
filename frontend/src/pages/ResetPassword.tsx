@@ -49,7 +49,7 @@ const ResetPassword = () => {
       if (res.data.message) {
         setMessage(res.data.message);
         setTimeout(() => {
-          navigate("/login");
+          navigate("/");
         }, 5000);
       }
     } catch (err) {
@@ -71,14 +71,14 @@ const ResetPassword = () => {
 
       <form onSubmit={handlePasswordReset}>
         <InputField
-          // type="password"
+          type="password"
           label="password"
           name="password"
           onChange={() => setError(null)}
           required
         />
         <InputField
-          // type="password"
+          type="password"
           label="Confirm Password"
           name="confirm_password"
           onChange={() => setError(null)}

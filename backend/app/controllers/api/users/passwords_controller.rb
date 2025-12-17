@@ -45,13 +45,13 @@ module Api
           return render_error(user.errors.full_messages.join(", "), :unprocessable_entity)
         end
 
-        payload = SignInWithJWT.new(self).issue_jwt(
+        payload = SignInWithJwt.new(self).issue_jwt(
           user,
           message: "Password was changed successfully"
         )
 
         render json: payload, status: :ok
-        
+
       rescue => e
         render_error(e.message, :internal_server_error)  
 

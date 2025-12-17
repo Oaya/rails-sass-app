@@ -12,7 +12,7 @@ module Api
         user = User.find_for_database_authentication(email: email)
 
         if user&.valid_password?(password)
-          payload = SignInWithJWT.new(self).issue_jwt(
+          payload = SignInWithJwt.new(self).issue_jwt(
             user,
             scope: resource_name,
             message: "Successfully Logged in"

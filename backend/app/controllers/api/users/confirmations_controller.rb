@@ -23,7 +23,7 @@ module Api
 
         # At this point the user is confirmed.
         # Sign them in so devise-jwt can issue a JWT.
-        payload = SignInWithJWT.new(self).issue_jwt(
+        payload = SignInWithJwt.new(self).issue_jwt(
           user,
           message: "Email confirmed and signed in successfully",
         )

@@ -1,4 +1,4 @@
-class SignInWithJWT 
+class SignInWithJwt
   def initialize(controller)
     @controller = controller
   end

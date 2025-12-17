@@ -11,10 +11,10 @@ module Api
         self.resource = accept_resource
 
         if resource.errors.empty?
-          payload = SignInWithJWT.new(self).issue_jwt(
+          payload = SignInWithJwt.new(self).issue_jwt(
             resource,
             scope: resource_name,
-            message: "Created your new password"  
+            message: "Created your new password"
           )
 
           render json: payload, status: :ok
@@ -26,13 +26,11 @@ module Api
       end
 
 
-
       private
 
       def ensure_admin!
         unless current_api_user&.is_admin?
-          render json: { error: "Forbidden" }, status: :forbidden
-          return
+          render_error("forbidden", :forbidden)
         end
       end
 
