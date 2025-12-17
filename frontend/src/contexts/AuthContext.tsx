@@ -8,6 +8,7 @@ import {
   useEffect,
 } from "react";
 import {
+  acceptInviteRequest,
   confirmAndSignIn,
   getAuthUserRequest,
   loginRequest,
@@ -21,6 +22,7 @@ import type {
   UpdatePasswordUser,
   User,
 } from "../types/auth";
+import type { InviteUser } from "../types/user";
 
 type AuthContextType = {
   user: User | null;
@@ -30,6 +32,8 @@ type AuthContextType = {
   confirmEmail: (token: string) => Promise<ApiResponse>;
   sendResetPasswordEmail: (email: string) => Promise<ApiResponse>;
   updatePassword: (data: UpdatePasswordUser) => Promise<ApiResponse>;
+  logout: () => Promise<void>;
+  acceptInvite: (data: InviteUser) => Promise<ApiResponse>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -40,6 +44,8 @@ const AuthContext = createContext<AuthContextType>({
   confirmEmail: async () => ({ success: true }),
   sendResetPasswordEmail: async () => ({ success: true }),
   updatePassword: async () => ({ success: true }),
+  logout: async () => {},
+  acceptInvite: async () => ({ success: true }),
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -111,6 +117,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return res;
   }, []);
 
+  const logout = useCallback(async () => {
+    localStorage.removeItem("jwt");
+    setUser(null);
+  }, []);
+
+  const acceptInvite = useCallback(async (data: InviteUser) => {
+    const res = await acceptInviteRequest(data);
+
+    if (res.success && res.data) {
+      localStorage.setItem("jwt", res.data.token);
+      setUser(res.data.user);
+    }
+    return res;
+  }, []);
+
   const value = useMemo(
     () => ({
       user,
@@ -120,6 +141,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       confirmEmail,
       sendResetPasswordEmail,
       updatePassword,
+      logout,
+      acceptInvite,
     }),
     [
       user,
@@ -129,6 +152,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       confirmEmail,
       sendResetPasswordEmail,
       updatePassword,
+      logout,
+      acceptInvite,
     ],
   );
 

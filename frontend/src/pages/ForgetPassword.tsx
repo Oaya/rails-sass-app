@@ -8,9 +8,11 @@ const ForgetPassword = () => {
   const { sendResetPasswordEmail } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handlePasswordReset = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const form = e.currentTarget;
 
@@ -26,6 +28,7 @@ const ForgetPassword = () => {
         );
       } catch (err) {
         setError((err as Error).message);
+        setIsSubmitting(false);
       }
     }
   };
@@ -46,10 +49,7 @@ const ForgetPassword = () => {
           required
         />
 
-        <button
-          type="submit"
-          className="bg-pink mt-2 mb-2 w-full rounded px-6 py-3 text-center text-white"
-        >
+        <button disabled={isSubmitting} type="submit" className="btn-primary">
           Reset Password
         </button>
       </form>

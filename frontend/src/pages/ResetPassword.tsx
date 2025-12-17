@@ -9,10 +9,12 @@ const ResetPassword = () => {
   const { updatePassword } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handlePasswordReset = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const form = e.currentTarget;
 
@@ -22,6 +24,7 @@ const ResetPassword = () => {
 
     if (data.password !== data.confirm_password) {
       setError("Password and Confirm password should match");
+      setIsSubmitting(false);
       return;
     }
 
@@ -82,10 +85,7 @@ const ResetPassword = () => {
           required
         />
 
-        <button
-          type="submit"
-          className="bg-pink mt-2 mb-2 w-full rounded px-6 py-3 text-center text-white"
-        >
+        <button disabled={isSubmitting} type="submit" className="btn-primary">
           Update Password
         </button>
       </form>

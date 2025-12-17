@@ -23,30 +23,16 @@ module Api
 
         # At this point the user is confirmed.
         # Sign them in so devise-jwt can issue a JWT.
-        sign_in(user)
-
-        # devise-jwt stores the token after sign_in
-        jwt = request.env["warden-jwt_auth.token"]
-
-        unless jwt
-          # Fallback in case JWT was not generated for some reason
-          return render_error("Could not generate authentication token", :internal_server_error)
-        end
-
-        render json: {
+        payload = SignInWithJWT.new(self).issue_jwt(
+          user,
           message: "Email confirmed and signed in successfully",
-          token: jwt,
-          user: {
-            id: user.id,
-            email: user.email,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            is_admin: user.is_admin,
-            tenant_id: user.tenant&.id,
-            plan: user.tenant.plan&.name
-          }
-        }, status: :ok
+        )
+
+        render json: payload, status: :ok
+      rescue => e
+        render_error(e.message, :internal_server_error)
       end
     end
   end
 end
+

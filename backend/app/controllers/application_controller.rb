@@ -6,13 +6,6 @@ class ApplicationController < ActionController::API
   include Devise::Controllers::SignInOut
   respond_to :json
 
-  def current_user
-    current_api_user
-  end
-
-  def authenticate_user!
-    authenticate_api_user!
-  end
 
   # Require a logged-in user for everything except Devise controllers
   before_action :authenticate_user!, unless: :devise_controller?
@@ -37,7 +30,17 @@ class ApplicationController < ActionController::API
 
   protected
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [ :first_name, :last_name ])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name])
+
+    devise_parameter_sanitizer.permit(
+      :invite,
+      keys: [:email, :first_name, :last_name, :tenant_id]
+    )
+
+    devise_parameter_sanitizer.permit(
+      :accept_invitation,
+      keys: [:invitation_token, :password, :password_confirmation]
+    )
   end
 
   private

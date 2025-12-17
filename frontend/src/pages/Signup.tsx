@@ -9,11 +9,12 @@ const Signup = () => {
   const { signup } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
-    setMessage(null);
+    clearState();
+    setIsSubmitting(true);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -22,6 +23,7 @@ const Signup = () => {
 
     if (data.password !== data.confirm_password) {
       setError("Password and Confirm password should match");
+      setIsSubmitting(false);
       return;
     }
 
@@ -33,6 +35,7 @@ const Signup = () => {
       }
     } catch (err) {
       setError((err as Error).message);
+      setIsSubmitting(false);
     }
   };
 
@@ -51,7 +54,13 @@ const Signup = () => {
       </div>
 
       <form onSubmit={handleSignup}>
-        <InputField label="Email" name="email" onChange={clearState} required />
+        <InputField
+          label="Email"
+          name="email"
+          type="email"
+          onChange={clearState}
+          required
+        />
 
         <div className="grid grid-cols-2 gap-6">
           <div className="group relative z-0 w-full">
@@ -109,10 +118,7 @@ const Signup = () => {
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="bg-pink w-full rounded px-6 py-3 text-center text-white"
-        >
+        <button disabled={isSubmitting} type="submit" className="btn-primary">
           Sign up
         </button>
 

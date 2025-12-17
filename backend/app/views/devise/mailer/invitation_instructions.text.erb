@@ -1,0 +1,8 @@
+Hello <%= @resource.email %>,
+
+You’ve been invited to join <%= Rails.application.class.module_parent_name %>.
+
+<% frontend = ENV.fetch("FRONTEND_URL", "http://localhost:5173") %>
+Accept: <%= "#{frontend}/accept-invite?invitation_token=#{@token}" %>
+
+If you didn’t expect this, you can ignore this email.

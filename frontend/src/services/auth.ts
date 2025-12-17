@@ -1,5 +1,6 @@
 import type { LoginUser, SignupUser, UpdatePasswordUser } from "../types/auth";
 import axios from "axios";
+import type { InviteUser } from "../types/user";
 
 export async function loginRequest(user: LoginUser): Promise<ApiResponse> {
   try {
@@ -7,8 +8,6 @@ export async function loginRequest(user: LoginUser): Promise<ApiResponse> {
       `${import.meta.env.VITE_API_URL}/api/users/sign_in`,
       { user },
     );
-
-    console.log("res headre", res.headers);
 
     const data = res.data;
 
@@ -42,7 +41,6 @@ export async function signupRequest(user: SignupUser): Promise<ApiResponse> {
         plan: user.plan,
       },
     });
-    console.log("res headre", res.headers);
 
     const data = res.data;
 
@@ -78,7 +76,6 @@ export async function confirmAndSignIn(token: string): Promise<ApiResponse> {
       `${import.meta.env.VITE_API_URL}/api/users/confirm_signin`,
       { confirmation_token: token },
     );
-    console.log("res headre", res.headers);
 
     const data = res.data;
 
@@ -98,7 +95,6 @@ export async function resetPasswordEmailRequest(
         user: { email },
       },
     );
-    console.log("res headre", res.headers);
 
     const data = res.data;
 
@@ -117,12 +113,25 @@ export async function updatePasswordRequest(
       { user },
     );
 
-    console.log("res headre", res.headers);
-
     const data = res.data;
 
     return { success: true, data };
   } catch (err: any) {
     throw new Error(`Error: ${err.response.data.error}`);
+  }
+}
+
+export async function acceptInviteRequest(
+  user: InviteUser,
+): Promise<ApiResponse> {
+  try {
+    const res = await axios.patch(
+      `${import.meta.env.VITE_API_URL}/api/users/invitation`,
+      { user },
+    );
+
+    return { success: true, data: res.data, status: res.status };
+  } catch (err: any) {
+    throw new Error(err.response?.data?.error || "Failed to accept invitation");
   }
 }

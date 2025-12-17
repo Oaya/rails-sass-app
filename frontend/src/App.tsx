@@ -9,6 +9,8 @@ import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { useAuth } from "./contexts/AuthContext";
 import Welcome from "./pages/Welcome";
+import AddMember from "./pages/AddMember";
+import AcceptInvite from "./pages/AcceptInvite";
 
 function Root() {
   const { user, isLoading } = useAuth();
@@ -29,6 +31,8 @@ function App() {
           <Route path="email-confirmed" element={<EmailConfirmed />} />
           <Route path="forget-password" element={<ForgetPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />
+          <Route path="add-member" element={<AddMember />} />
+          <Route path="accept-invite" element={<AcceptInvite />} />
         </Routes>
       </BrowserRouter>
     </>

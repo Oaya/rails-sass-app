@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
 import type { Plan } from "../../types/plan";
+import NavButton from "./NavButton";
 
 function PlanCard({ plan }: { plan: Plan }) {
   const projectNum = plan.features.project_number; // "1" or "unlimited"
@@ -25,13 +25,7 @@ function PlanCard({ plan }: { plan: Plan }) {
         <p className="text-xl font-bold">
           Price: {plan.price === "0" ? "Free" : `$ ${plan.price}`}
         </p>
-
-        <NavLink
-          to="/signup"
-          className="bg-pink mt-2 box-border inline-flex items-center rounded border border-transparent px-4 py-2.5 text-sm leading-5 font-medium text-white shadow-xs focus:ring-4 focus:outline-none"
-        >
-          Sign Up
-        </NavLink>
+        <NavButton to="/signup" text="Sign up" />
       </div>
     </div>
   );

@@ -7,34 +7,25 @@ module Api
         email    = params.dig(:user, :email)&.downcase
         password = params.dig(:user, :password)
 
-        unless email.present? && password.present?
-
-          return render_error("Email and password are required", :unprocessable_entity)
-        end
+        return render_error("Email and password are required", :unprocessable_entity) unless email.present? && password.present?
 
         user = User.find_for_database_authentication(email: email)
 
         if user&.valid_password?(password)
-          sign_in(resource_name, user)  # devise-jwt hooks here
+          payload = SignInWithJWT.new(self).issue_jwt(
+            user,
+            scope: resource_name,
+            message: "Successfully Logged in"
+          )
 
-          render json: {
-            message: "Successfully Logged in",
-            user: {
-              id: user.id,
-              email: user.email,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              is_admin: user.is_admin,
-              tenant: user.tenant ? {
-                id: user.tenant.id,
-                plan: user.tenant.plan ? user.tenant.plan.name : nil
-              } : nil
-            }
-          }, status: :ok
+          render json: payload, status: :ok
         else
-          render_error("Invalid email or password", :unauthorized) 
+          render_error("Invalid email or password", :unauthorized)
         end
+      rescue => e
+        render_error(e.message, :internal_server_error)
       end
+
     end
   end
 end

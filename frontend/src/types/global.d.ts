@@ -7,6 +7,7 @@ declare global {
     message?: string;
     data?: any;
     error?: AxiosError | string;
+    status?: number;
   }
 }
 

@@ -1,0 +1,9 @@
+@layer components {
+  .btn-primary {
+    @apply bg-pink my-2 w-full rounded px-6 py-3 text-center text-white;
+  }
+
+  .btn-primary:disabled {
+    @apply bg-mid-pink cursor-not-allowed;
+  }
+}

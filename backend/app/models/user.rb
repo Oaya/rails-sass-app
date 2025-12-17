@@ -5,7 +5,8 @@ class User < ApplicationRecord
   # jit is the json token identifier and unique ID for token. and Devise-JWT uses it for the token revocation strategy to invalidate old or logged-out tokens
   include Devise::JWT::RevocationStrategies::JTIMatcher
 
-  devise :database_authenticatable,
+  devise :invitable,
+         :database_authenticatable,
          :registerable,
          :recoverable,
          :rememberable,
@@ -14,4 +15,3 @@ class User < ApplicationRecord
          :jwt_authenticatable,
          jwt_revocation_strategy: self
 end
-  

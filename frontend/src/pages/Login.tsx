@@ -9,10 +9,12 @@ const Login = () => {
   const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -29,6 +31,7 @@ const Login = () => {
         }
       } catch (err) {
         setError((err as Error).message);
+        setIsSubmitting(false);
       }
     }
   };
@@ -58,10 +61,7 @@ const Login = () => {
           required
         />
 
-        <button
-          type="submit"
-          className="bg-pink my-2 w-full rounded px-6 py-3 text-center text-white"
-        >
+        <button disabled={isSubmitting} type="submit" className="btn-primary">
           Log In
         </button>
       </form>
