@@ -2,7 +2,7 @@ module Api
   module Users
     class ConfirmationsController < ApplicationController
       # This is not a Devise controller, so we skip auth
-      skip_before_action :authenticate_user!, :set_current_user_and_tenant
+      skip_before_action :authenticate_user!, :set_current_user_tenant_plan
       respond_to :json
 
     

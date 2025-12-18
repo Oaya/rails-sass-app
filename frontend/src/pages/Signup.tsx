@@ -113,6 +113,7 @@ const Signup = () => {
               className="mb-2 w-full rounded border border-gray-300 bg-white p-3 px-6 py-3 shadow-md"
             >
               <option value="free">Free</option>
+              <option value="premium">Standard</option>
               <option value="premium">Premium</option>
             </select>
           </div>

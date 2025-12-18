@@ -4,8 +4,8 @@ module Api
       respond_to :json
       wrap_parameters false
 
-      before_action :authenticate_user!, only: [:create]
-      before_action :ensure_admin!, only: [:create]
+      before_action :authenticate_user!, :ensure_admin!, :check_member_limit, only: [:create]
+
 
       def update
         self.resource = accept_resource
@@ -30,6 +30,21 @@ module Api
 
       def ensure_admin!
         render_error("forbidden", :forbidden) unless current_user&.is_admin
+      end
+
+      def check_member_limit
+        tenant = current_user&.tenant
+
+        limit = tenant.plan.features&.fetch("member", nil)
+
+        return if limit == "unlimited"
+        member_limit = limit.to_i
+        
+        current_members = tenant.users.count
+
+        if current_members >= member_limit
+          render_error("You have reached member limit", :unprocessable_entity)
+        end
       end
 
       def invite_params
