@@ -11,6 +11,8 @@ import { useAuth } from "./contexts/AuthContext";
 import Welcome from "./pages/Welcome";
 import AddMember from "./pages/AddMember";
 import AcceptInvite from "./pages/AcceptInvite";
+import AddProject from "./pages/AddProject";
+import RequireAuth from "./components/RequireAuth";
 
 function Root() {
   const { user, isLoading } = useAuth();
@@ -31,8 +33,24 @@ function App() {
           <Route path="email-confirmed" element={<EmailConfirmed />} />
           <Route path="forget-password" element={<ForgetPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />
-          <Route path="add-member" element={<AddMember />} />
           <Route path="accept-invite" element={<AcceptInvite />} />
+
+          <Route
+            path="add-project"
+            element={
+              <RequireAuth>
+                <AddProject />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="add-member"
+            element={
+              <RequireAuth>
+                <AddMember />
+              </RequireAuth>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>

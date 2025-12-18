@@ -66,7 +66,7 @@ export async function getAuthUserRequest(): Promise<ApiResponse> {
 
     return { success: true, data: res.data };
   } catch (err: any) {
-    throw new Error(err.response?.data?.error || "Failed to get Auth user");
+    throw new Error(err.response.data.error);
   }
 }
 

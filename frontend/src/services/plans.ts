@@ -1,10 +1,15 @@
-export async function getPlans() {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/plans`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+import axios from "axios";
 
-  const data = await res.json();
-  return data;
+export async function getPlans(): Promise<ApiResponse> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/plans`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    return { success: true, data: res.data };
+  } catch (err: any) {
+    throw new Error(`Error: ${err.response.data.error}`);
+  }
 }

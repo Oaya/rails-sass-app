@@ -14,14 +14,24 @@ plans = [
     name: "free",
     price: 0,
     features: {
-      project_number: "1"
+      project_number: "10",
+      member: "10"
+    }
+  },
+  {
+    name: "standard",
+    price: 20,
+    features: {
+      project_number: "50",
+      member: "50"
     }
   },
   {
     name: "premium",
-    price: 10,
+    price: 50,
     features: {
-      project_number: "unlimited"
+      project_number: "unlimited",
+      member: "unlimited"
     }
   }
 ]

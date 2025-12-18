@@ -10,6 +10,8 @@ Rails.application.routes.draw do
         invitations: "api/users/invitations"
       }
 
+    resources :projects, only: [:create, :index, :show, :update, :destroy]
+
     get "me", to: "users#me"
     get "plans", to: "plans#index"
     post "users/confirm_signin", to: "users/confirmations#confirm_signin"

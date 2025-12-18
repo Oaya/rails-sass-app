@@ -9,6 +9,10 @@ class Plan < ApplicationRecord
     plan.name == "free"
   end
 
+  def standard?
+    plan.name == "standard"
+  end
+
   def premium?
     plan.name == "premium"
   end

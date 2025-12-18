@@ -2,8 +2,16 @@ import type { Plan } from "../../types/plan";
 import NavButton from "./NavButton";
 
 function PlanCard({ plan }: { plan: Plan }) {
+  const isUnlimited = (feature: string) => {
+    if (feature === "unlimited") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const projectNum = plan.features.project_number; // "1" or "unlimited"
-  const isUnlimited = projectNum === "unlimited";
+  const memberNum = plan.features.member;
 
   return (
     <div className="text-left">
@@ -17,8 +25,24 @@ function PlanCard({ plan }: { plan: Plan }) {
           <li>Responsive design</li>
           <li>Access anywhere</li>
 
-          <li className={isUnlimited ? "text-green-600" : "text-black"}>
+          <li
+            className={
+              isUnlimited(plan.features.project_number)
+                ? "text-green-600"
+                : "text-black"
+            }
+          >
             {projectNum} {projectNum === "1" ? "project" : "projects"}
+          </li>
+
+          <li
+            className={
+              isUnlimited(plan.features.member)
+                ? "text-green-600"
+                : "text-black"
+            }
+          >
+            {memberNum} member
           </li>
         </ul>
 

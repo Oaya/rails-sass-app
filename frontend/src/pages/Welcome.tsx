@@ -10,8 +10,9 @@ const Welcome = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const fetchedPlans = await getPlans();
-        setPlans(fetchedPlans);
+        const res = await getPlans();
+
+        setPlans(res.data);
       } catch (err) {
         setError((err as Error).message);
       }

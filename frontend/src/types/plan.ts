@@ -3,6 +3,7 @@ export type Plan = {
   name: string;
   features: {
     project_number: string;
+    member: string;
   };
   price: string;
 };

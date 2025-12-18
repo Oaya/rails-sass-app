@@ -1,8 +1,10 @@
 Hello <%= @resource.email %>,
 
-You’ve been invited to join <%= Rails.application.class.module_parent_name %>.
+You’ve been invited to join <%= @resource.tenant&.name || Rails.application.class.module_parent_name %>.
+
 
 <% frontend = ENV.fetch("FRONTEND_URL", "http://localhost:5173") %>
-Accept: <%= "#{frontend}/accept-invite?invitation_token=#{@token}" %>
+Accept: <%= "#{frontend}/accept-invite?invitation_token=#{@token}&tenant=#{ERB::Util.url_encode(@resource.tenant.name)}" %>
+
 
 If you didn’t expect this, you can ignore this email.

@@ -28,7 +28,6 @@ const AddMember = () => {
         ...data,
         tenant_id: user?.tenant_id,
       } as AddMemberUser);
-      console.log("res", res);
 
       if (res.status === 201) {
         setMessage(`Invitation Email was sent to ${res.data.email}`);
@@ -45,7 +44,7 @@ const AddMember = () => {
 
   return (
     <div className="m-10 mx-auto w-150 text-2xl">
-      <h2 className="pb-4 text-center text-5xl">New Member</h2>
+      <h2 className="pb-4 text-center text-5xl">Invite new member</h2>
 
       <div className="fixed top-20 right-8 z-50 space-y-2">
         {error && <Toast message={error} type="error" />}

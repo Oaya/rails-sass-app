@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { BsFillPeopleFill } from "react-icons/bs";
+import { BsJournalPlus } from "react-icons/bs";
 import NavButton from "../ui/NavButton";
 
 export default function Header() {
@@ -23,10 +24,15 @@ export default function Header() {
               </span>
             </NavLink>
 
-            {user && (
-              <NavButton to="add-member" text="Add Member">
-                <BsFillPeopleFill className="text-base" />
-              </NavButton>
+            {user?.is_admin && (
+              <div>
+                <NavButton to="add-member" text="Add Member">
+                  <BsFillPeopleFill className="text-base" />
+                </NavButton>
+                <NavButton to="add-project" text="Add Project">
+                  <BsJournalPlus className="text-base" />
+                </NavButton>
+              </div>
             )}
           </div>
 

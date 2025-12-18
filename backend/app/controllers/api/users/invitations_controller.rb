@@ -4,7 +4,7 @@ module Api
       respond_to :json
       wrap_parameters false
 
-      before_action :authenticate_api_user!, only: [:create]
+      before_action :authenticate_user!, only: [:create]
       before_action :ensure_admin!, only: [:create]
 
       def update
@@ -29,9 +29,7 @@ module Api
       private
 
       def ensure_admin!
-        unless current_api_user&.is_admin?
-          render_error("forbidden", :forbidden)
-        end
+        render_error("forbidden", :forbidden) unless current_user&.is_admin
       end
 
       def invite_params

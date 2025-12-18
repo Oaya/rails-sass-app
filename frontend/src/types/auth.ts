@@ -5,6 +5,7 @@ export type User = {
   last_name: string;
   is_admin: boolean;
   tenant_id: string;
+  tenant_name: string;
   plan: string;
 };
 

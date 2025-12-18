@@ -1,3 +1,3 @@
 class Current < ActiveSupport::CurrentAttributes
-  attribute :user, :account
+  attribute :user, :tenant, :plan
 end

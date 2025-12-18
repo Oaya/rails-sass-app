@@ -13,6 +13,7 @@ const AcceptInvite = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const tenantName = searchParams.get("tenant");
 
   const handleCreatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,8 +45,8 @@ const AcceptInvite = () => {
         invitation_token: invitationToken,
       } as InviteUser);
 
-      if (res.message) {
-        setMessage(res.message);
+      if (res.data.message) {
+        setMessage(res.data.message);
         navigate("/");
       }
 
@@ -59,7 +60,9 @@ const AcceptInvite = () => {
 
   return (
     <div className="m-10 mx-auto w-150 text-2xl">
-      <h2 className="pb-4 text-center text-5xl">You are invited </h2>
+      <h2 className="pb-4 text-center text-5xl">
+        You are invited to {tenantName}
+      </h2>
 
       <div className="fixed top-20 right-8 z-50 space-y-2">
         {error && <Toast message={error} type="error" />}

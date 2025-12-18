@@ -37,6 +37,7 @@ class SignInWithJwt
       last_name: user.last_name,
       is_admin: user.is_admin,
       tenant_id: user.tenant&.id,
+      tenant_name: user.tenant&.name,
       plan: user.tenant&.plan&.name
     }
   end
