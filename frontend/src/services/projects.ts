@@ -3,28 +3,22 @@ import type { CreateProject, Project } from "../types/project";
 
 export async function createProjectRequest(
   data: CreateProject,
-): Promise<ApiResponse> {
+): Promise<{ project: Project }> {
   const token = localStorage.getItem("jwt");
+  if (!token) throw new Error("No token");
 
-  if (!token) return { success: false, error: "No token" };
-
-  try {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/projects`,
-      { project: data },
-      {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+  const res = await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/projects`,
+    { project: data },
+    {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    );
-    console.log(res);
+    },
+  );
 
-    return { success: true, status: res.status };
-  } catch (err: any) {
-    throw new Error(err.response?.data?.error || "Failed to invite member");
-  }
+  return res.data;
 }
 
 export async function getProjectsRequest(): Promise<Project[]> {

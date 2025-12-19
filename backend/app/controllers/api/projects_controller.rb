@@ -21,7 +21,9 @@ module Api
         project = Current.tenant.projects.build(project_params)
 
         if project.save
-          head :created
+          render json: {
+            project: project
+          }, status: :ok
 
         else
           render_error(project.errors.full_messages.join(", "),  :unprocessable_entity)

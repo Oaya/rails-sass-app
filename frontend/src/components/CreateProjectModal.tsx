@@ -4,7 +4,6 @@ import Popup from "reactjs-popup";
 import DatePicker from "react-datepicker";
 import { AiOutlineClose } from "react-icons/ai";
 
-import { createProjectRequest } from "../services/projects";
 import type { CreateProject } from "../types/project";
 import Toast from "./ui/Toast";
 import InputField from "./ui/inputField";
@@ -12,9 +11,10 @@ import InputField from "./ui/inputField";
 type Props = {
   open: boolean;
   onClose: () => void;
+  mutation: (payload: CreateProject) => Promise<unknown>;
 };
 
-export default function CreateProjectModal({ open, onClose }: Props) {
+export default function CreateProjectModal({ open, onClose, mutation }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -30,14 +30,17 @@ export default function CreateProjectModal({ open, onClose }: Props) {
 
     if (selectedDate) {
       try {
-        const res = await createProjectRequest({
+        const res = await mutation({
           ...data,
           expected_completion_date: selectedDate.toISOString().slice(0, 10),
         } as CreateProject);
 
-        if (res.success) {
+        if (res) {
           setMessage("Project was created");
-          handleClose();
+
+          setTimeout(() => {
+            handleClose();
+          }, 3000);
         }
       } catch (err) {
         setError((err as Error).message);
@@ -69,13 +72,7 @@ export default function CreateProjectModal({ open, onClose }: Props) {
   };
 
   return (
-    <Popup
-      open={open}
-      modal
-      onOpen={handleOpen}
-      onClose={handleClose}
-      className="rounded"
-    >
+    <Popup open={open} modal onOpen={handleOpen} onClose={handleClose}>
       <button
         type="button"
         onClick={() => {

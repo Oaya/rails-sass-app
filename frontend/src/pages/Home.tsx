@@ -8,7 +8,7 @@ import CreateProjectModal from "../components/CreateProjectModal";
 
 const Home = () => {
   const { user } = useAuth();
-  const { projects, isLoading, error } = useProjectData();
+  const { projects, isLoading, error, addProjectMutation } = useProjectData();
   const [open, setOpen] = useState(false);
 
   if (isLoading) {
@@ -26,10 +26,25 @@ const Home = () => {
         {error && <Toast message={error.message} type="error" />}
       </div>
 
+      <CreateProjectModal
+        open={open}
+        onClose={() => setOpen(false)}
+        mutation={(payload) => addProjectMutation.mutateAsync(payload)}
+      />
+
       {projects?.length === 0 ? (
-        <p className="mt-10 text-center text-2xl">
-          You don't have projects yet
-        </p>
+        <div className="text-center">
+          <p className="mt-10 text-2xl">You don't have projects yet</p>
+          {user?.is_admin ? (
+            <button
+              onClick={() => setOpen(true)}
+              className="bg-pink my-5 inline-flex items-center rounded border border-transparent px-20 py-4 text-base leading-5 font-medium text-white shadow-xs"
+            >
+              <BsJournalPlus className="mr-2" />
+              Add Project
+            </button>
+          ) : null}
+        </div>
       ) : (
         <div>
           <div className="flex flex-wrap justify-between">
@@ -44,8 +59,6 @@ const Home = () => {
               </button>
             ) : null}
           </div>
-
-          <CreateProjectModal open={open} onClose={() => setOpen(false)} />
 
           <div className="overflow-hidden rounded-lg text-xl shadow-lg">
             <table className="w-full table-fixed">
