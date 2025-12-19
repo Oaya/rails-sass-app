@@ -2,6 +2,14 @@ module Api
   class ProjectsController < ApplicationController
     before_action :check_is_admin, only: [ :create ]
 
+    def index
+      projects = Current.tenant.projects
+      pp projects
+
+      render json: projects, status: :ok
+    end
+
+
     def create
       # check the tenant's plan. if it's over the features project_number then we can't create.
       # get the current tenant project number first
@@ -13,9 +21,7 @@ module Api
         project = Current.tenant.projects.build(project_params)
 
         if project.save
-          render json: {
-            project: project
-          }, status: :created
+          head :created
 
         else
           render_error(project.errors.full_messages.join(", "),  :unprocessable_entity)

@@ -11,8 +11,10 @@ import { useAuth } from "./contexts/AuthContext";
 import Welcome from "./pages/Welcome";
 import AddMember from "./pages/AddMember";
 import AcceptInvite from "./pages/AcceptInvite";
-import AddProject from "./pages/AddProject";
 import RequireAuth from "./components/RequireAuth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function Root() {
   const { user, isLoading } = useAuth();
@@ -23,7 +25,7 @@ function Root() {
 
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Header />
         <Routes>
@@ -34,15 +36,6 @@ function App() {
           <Route path="forget-password" element={<ForgetPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="accept-invite" element={<AcceptInvite />} />
-
-          <Route
-            path="add-project"
-            element={
-              <RequireAuth>
-                <AddProject />
-              </RequireAuth>
-            }
-          />
           <Route
             path="add-member"
             element={
@@ -53,7 +46,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
-    </>
+    </QueryClientProvider>
   );
 }
 

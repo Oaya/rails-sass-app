@@ -22,7 +22,7 @@ const Welcome = () => {
   }, []);
 
   return (
-    <div className="px-30 py-20 text-center">
+    <div className="px-20 py-20 text-center">
       <section className="h-100 rounded-xl bg-[url('/src/assets/jumbotron.jpg')] bg-cover bg-center bg-no-repeat bg-blend-multiply">
         <div className="mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 py-24 text-center">
           <h1 className="mb-6 text-4xl font-bold tracking-tighter text-white md:text-5xl lg:text-6xl">

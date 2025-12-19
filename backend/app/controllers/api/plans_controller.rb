@@ -5,7 +5,6 @@ module Api
     def index
       plans = Plan.all
 
-      pp plans
       render json: plans, status: :ok
     rescue
       render_error("Unable to fetch plans", :internal_server_error)
