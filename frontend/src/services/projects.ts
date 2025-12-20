@@ -57,3 +57,20 @@ export async function updateProject(data: UpdateProject): Promise<Project> {
 
   return res.data;
 }
+
+export async function deleteProject(id: number) {
+  const token = localStorage.getItem("jwt");
+  if (!token) throw new Error("No token");
+
+  const res = await axios.delete(
+    `${import.meta.env.VITE_API_URL}/api/projects/${id}`,
+    {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.data;
+}

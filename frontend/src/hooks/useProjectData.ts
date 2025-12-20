@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createProject,
+  deleteProject,
   getProjects,
   updateProject,
 } from "../services/projects";
@@ -38,11 +39,22 @@ export const useProjectData = () => {
     },
   });
 
+  const removeProjectMutation = useMutation<Project, Error, number>({
+    mutationFn: deleteProject,
+    onSuccess: (_, id) => {
+      queryClient.setQueryData<Project[]>(["projects"], (old = []) => {
+        if (!old) return [];
+        return old.filter((s) => s.id !== id);
+      });
+    },
+  });
+
   return {
     projects: projects ?? [],
     error,
     isLoading,
     addProjectMutation,
     updateProjectMutation,
+    removeProjectMutation,
   };
 };

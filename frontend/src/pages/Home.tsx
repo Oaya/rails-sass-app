@@ -15,6 +15,7 @@ const Home = () => {
     error,
     addProjectMutation,
     updateProjectMutation,
+    removeProjectMutation,
   } = useProjectData();
 
   const [open, setOpen] = useState(false);
@@ -98,9 +99,6 @@ const Home = () => {
                   <th className="w-2/8 border-r border-gray-200 px-6 py-4">
                     Expected completion Date
                   </th>
-                  <th className="w-1/8 border-r border-gray-200 px-6 py-4">
-                    Created By
-                  </th>
                   <th className="w-2/8 border-r border-gray-200 px-6 py-4">
                     Action
                   </th>
@@ -123,10 +121,6 @@ const Home = () => {
                       {project.expected_completion_date}
                     </td>
                     <td className="border border-gray-200 px-6 py-4">
-                      {project.created_by.first_name}{" "}
-                      {project.created_by.last_name}
-                    </td>
-                    <td className="border border-gray-200 px-6 py-4">
                       <button
                         onClick={() => openModal(project)}
                         className="bg-pink mr-4 inline-block rounded px-4 py-2 text-center text-white"
@@ -135,7 +129,9 @@ const Home = () => {
                       </button>
 
                       <button
-                        // onClick={() => addStock(stock.ticker)}
+                        onClick={() =>
+                          removeProjectMutation.mutateAsync(project.id)
+                        }
                         className="bg-pink inline-block rounded px-4 py-2 text-center text-white"
                       >
                         Delete

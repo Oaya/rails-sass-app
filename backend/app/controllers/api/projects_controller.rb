@@ -7,7 +7,7 @@ module Api
 
       render json: projects.as_json(
         include: {
-          created_by: { only: [:first_name, :last_name] }
+          created_by: { only: [ :first_name, :last_name ] }
         }
       ), status: :ok
     end
@@ -42,9 +42,8 @@ module Api
       end
     end
 
-    #User that same tenant with the project can update
+    # User that same tenant with the project can update
     def update
-
       pp project_params
       project = Current.tenant.projects.find(params[:id])
 
@@ -52,10 +51,23 @@ module Api
         project = Project.includes(:created_by).find(project.id)
 
         render json: project.as_json(
-          include: { created_by: { only: [:first_name, :last_name] } }
+          include: { created_by: { only: [ :first_name, :last_name ] } }
         ), status: :ok
       else
         render_error(project.errors.full_messages.join(", "), :unprocessable_entity)
+      end
+    end
+
+    def destroy
+      project = Current.tenant.projects.find(params[:id])
+
+
+      if project.destroy
+        render json: { message: "Project was deleted" }, status: :ok
+      else
+        render json: {
+          error: project.errors.full_messages.join(" ")
+        }, status: :unprocessable_entity
       end
     end
 
