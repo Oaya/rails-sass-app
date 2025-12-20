@@ -5,8 +5,19 @@ export type CreateProject = {
 };
 
 export type Project = {
-  id: string;
+  id: number;
   title: string;
   details: string;
   expected_completion_date: string;
+  created_by: {
+    first_name: string;
+    last_name: string;
+  };
+};
+
+export type UpdateProject = {
+  id: number;
+  title?: string;
+  details?: string;
+  expected_completion_date?: string;
 };

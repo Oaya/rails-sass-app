@@ -1,35 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 
 import DatePicker from "react-datepicker";
 import { AiOutlineClose } from "react-icons/ai";
 
-import type { CreateProject } from "../types/project";
+import type { CreateProject, Project, UpdateProject } from "../types/project";
 import Toast from "./ui/Toast";
 import InputField from "./ui/inputField";
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  mutation: (payload: CreateProject) => Promise<unknown>;
+  modalType: "Create" | "Update";
+  project?: Project | null;
+  mutation: (payload: CreateProject | UpdateProject) => Promise<unknown>;
 };
 
-export default function CreateProjectModal({ open, onClose, mutation }: Props) {
+export default function CreateProjectModal({
+  open,
+  onClose,
+  modalType,
+  project,
+  mutation,
+}: Props) {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  const createProject = async (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (!open) return;
+    console.log(project);
+
+    setError(null);
+    setMessage(null);
+    setIsSubmitting(false);
+
+    if (modalType === "Update" && project?.expected_completion_date) {
+      setSelectedDate(new Date(project.expected_completion_date));
+    } else {
+      setSelectedDate(null);
+    }
+  }, [open, modalType, project]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
 
     const data = Object.fromEntries(formData.entries());
 
-    if (selectedDate) {
-      try {
+    try {
+      if (modalType === "Create") {
+        if (!selectedDate) throw new Error("Date is required");
+
         const res = await mutation({
           ...data,
           expected_completion_date: selectedDate.toISOString().slice(0, 10),
@@ -42,24 +68,38 @@ export default function CreateProjectModal({ open, onClose, mutation }: Props) {
             handleClose();
           }, 3000);
         }
-      } catch (err) {
-        setError((err as Error).message);
-        setIsSubmitting(false);
-      }
-    } else {
-      return;
-    }
-  };
+      } else {
+        if (!project?.id) throw new Error("project Id is missing");
 
-  const handleChange = (date: Date | null) => {
-    setSelectedDate(date);
+        const payload: UpdateProject = {
+          ...data,
+          id: project.id,
+        };
+
+        if (selectedDate)
+          payload.expected_completion_date = selectedDate
+            .toISOString()
+            .slice(0, 10);
+        const res = await mutation(payload);
+
+        if (res) {
+          setMessage("Project was updated");
+
+          setTimeout(() => {
+            handleClose();
+          }, 3000);
+        }
+      }
+    } catch (err) {
+      setError((err as Error).message);
+      setIsSubmitting(false);
+    }
   };
 
   const resetFormState = () => {
     setError(null);
     setMessage(null);
     setIsSubmitting(false);
-    setSelectedDate(null);
   };
 
   const handleOpen = () => {
@@ -68,6 +108,7 @@ export default function CreateProjectModal({ open, onClose, mutation }: Props) {
 
   const handleClose = () => {
     resetFormState();
+    setSelectedDate(null);
     onClose();
   };
 
@@ -89,19 +130,21 @@ export default function CreateProjectModal({ open, onClose, mutation }: Props) {
         </div>
 
         <div className="mt-10">
-          <h3 className="mb-3">Create Project</h3>
-          <form onSubmit={createProject}>
+          <h3 className="mb-3">{modalType} Project</h3>
+          <form onSubmit={handleSubmit}>
             <InputField
               label="Title"
               name="title"
               onChange={() => setError(null)}
-              required
+              defaultValue={modalType === "Update" ? project?.title : ""}
+              required={modalType === "Create"}
             />
             <InputField
               label="Details"
               name="details"
               onChange={() => setError(null)}
-              required
+              defaultValue={modalType === "Update" ? project?.details : ""}
+              required={modalType === "Create"}
             />
 
             <label className="block text-lg font-bold">
@@ -110,8 +153,8 @@ export default function CreateProjectModal({ open, onClose, mutation }: Props) {
             <DatePicker
               className="mb-2 w-150 rounded border border-gray-300 bg-white px-6 py-3 shadow-md"
               selected={selectedDate}
-              onChange={handleChange}
-              required
+              onChange={(date) => setSelectedDate(date)}
+              required={modalType === "Create"}
             />
 
             <button
@@ -119,7 +162,7 @@ export default function CreateProjectModal({ open, onClose, mutation }: Props) {
               type="submit"
               className="btn-primary"
             >
-              Create
+              {modalType}
             </button>
           </form>
         </div>

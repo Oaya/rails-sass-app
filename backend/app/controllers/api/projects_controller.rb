@@ -3,10 +3,13 @@ module Api
     before_action :check_is_admin, only: [ :create ]
 
     def index
-      projects = Current.tenant.projects
-      pp projects
+      projects = Current.tenant.projects.includes(:created_by)
 
-      render json: projects, status: :ok
+      render json: projects.as_json(
+        include: {
+          created_by: { only: [:first_name, :last_name] }
+        }
+      ), status: :ok
     end
 
 
@@ -19,11 +22,16 @@ module Api
 
       if  limit == "unlimited" ||  count < limit.to_i
         project = Current.tenant.projects.build(project_params)
+        project.created_by = Current.user
 
         if project.save
-          render json: {
-            project: project
-          }, status: :ok
+
+        render json: project.as_json(
+          include: {
+            created_by: { only: [ :first_name, :last_name ] }
+          }
+        ), status: :ok
+
 
         else
           render_error(project.errors.full_messages.join(", "),  :unprocessable_entity)
@@ -31,6 +39,23 @@ module Api
 
       else
         render_error("You have reached project limit", :unprocessable_entity)
+      end
+    end
+
+    #User that same tenant with the project can update
+    def update
+
+      pp project_params
+      project = Current.tenant.projects.find(params[:id])
+
+      if project.update(project_params)
+        project = Project.includes(:created_by).find(project.id)
+
+        render json: project.as_json(
+          include: { created_by: { only: [:first_name, :last_name] } }
+        ), status: :ok
+      else
+        render_error(project.errors.full_messages.join(", "), :unprocessable_entity)
       end
     end
 

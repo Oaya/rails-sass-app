@@ -4,12 +4,21 @@ import { useAuth } from "../contexts/AuthContext";
 import { useProjectData } from "../hooks/useProjectData";
 
 import { BsJournalPlus } from "react-icons/bs";
-import CreateProjectModal from "../components/CreateProjectModal";
+import ProjectModal from "../components/ProjectModal";
+import type { CreateProject, Project, UpdateProject } from "../types/project";
 
 const Home = () => {
   const { user } = useAuth();
-  const { projects, isLoading, error, addProjectMutation } = useProjectData();
+  const {
+    projects,
+    isLoading,
+    error,
+    addProjectMutation,
+    updateProjectMutation,
+  } = useProjectData();
+
   const [open, setOpen] = useState(false);
+  const [project, setProject] = useState<Project | null>();
 
   if (isLoading) {
     return (
@@ -17,19 +26,35 @@ const Home = () => {
     );
   }
 
+  const openModal = (project?: Project) => {
+    setOpen(true);
+    setProject(project);
+  };
+
+  const errorMessage =
+    error instanceof Error ? error.message : error ? String(error) : null;
+
   return (
     <div className="m-10 mx-auto px-20 text-2xl">
       <h2>Hello, {user?.first_name}</h2>
       <p>Your organization is {user?.tenant_name}</p>
 
       <div className="fixed top-20 right-8 z-50 space-y-2">
-        {error && <Toast message={error.message} type="error" />}
+        {errorMessage && <Toast message={errorMessage} type="error" />}
       </div>
 
-      <CreateProjectModal
+      <ProjectModal
         open={open}
         onClose={() => setOpen(false)}
-        mutation={(payload) => addProjectMutation.mutateAsync(payload)}
+        project={project}
+        modalType={project ? "Update" : "Create"}
+        mutation={
+          project
+            ? (payload) =>
+                updateProjectMutation.mutateAsync(payload as UpdateProject)
+            : (payload) =>
+                addProjectMutation.mutateAsync(payload as CreateProject)
+        }
       />
 
       {projects?.length === 0 ? (
@@ -37,7 +62,7 @@ const Home = () => {
           <p className="mt-10 text-2xl">You don't have projects yet</p>
           {user?.is_admin ? (
             <button
-              onClick={() => setOpen(true)}
+              onClick={() => openModal()}
               className="bg-pink my-5 inline-flex items-center rounded border border-transparent px-20 py-4 text-base leading-5 font-medium text-white shadow-xs"
             >
               <BsJournalPlus className="mr-2" />
@@ -64,16 +89,19 @@ const Home = () => {
             <table className="w-full table-fixed">
               <thead>
                 <tr className="bg-white text-left font-bold text-gray-600">
-                  <th className="w-1/6 border-r border-gray-200 px-6 py-4">
+                  <th className="w-1/8 border-r border-gray-200 px-6 py-4">
                     Title
                   </th>
-                  <th className="w-2/6 border-r border-gray-200 px-6 py-4">
+                  <th className="w-2/8 border-r border-gray-200 px-6 py-4">
                     Details
                   </th>
-                  <th className="w-2/6 border-r border-gray-200 px-6 py-4">
+                  <th className="w-2/8 border-r border-gray-200 px-6 py-4">
                     Expected completion Date
                   </th>
-                  <th className="w-2/6 border-r border-gray-200 px-6 py-4">
+                  <th className="w-1/8 border-r border-gray-200 px-6 py-4">
+                    Created By
+                  </th>
+                  <th className="w-2/8 border-r border-gray-200 px-6 py-4">
                     Action
                   </th>
                 </tr>
@@ -94,20 +122,25 @@ const Home = () => {
                     <td className="border border-gray-200 px-6 py-4">
                       {project.expected_completion_date}
                     </td>
-                    {/* <td className="border border-gray-200 px-6 py-4">
-                    {project.isTracking ? (
-                      <span className="inline-block rounded bg-gray-300 px-4 py-2 text-center text-white">
-                        Already Tracking
-                      </span>
-                    ) : (
+                    <td className="border border-gray-200 px-6 py-4">
+                      {project.created_by.first_name}{" "}
+                      {project.created_by.last_name}
+                    </td>
+                    <td className="border border-gray-200 px-6 py-4">
                       <button
-                        onClick={() => addStock(stock.ticker)}
-                        className="bg-c-purple inline-block rounded px-4 py-2 text-center text-white"
+                        onClick={() => openModal(project)}
+                        className="bg-pink mr-4 inline-block rounded px-4 py-2 text-center text-white"
                       >
-                        Track
+                        Update
                       </button>
-                    )}
-                  </td> */}
+
+                      <button
+                        // onClick={() => addStock(stock.ticker)}
+                        className="bg-pink inline-block rounded px-4 py-2 text-center text-white"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

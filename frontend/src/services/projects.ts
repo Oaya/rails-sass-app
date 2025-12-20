@@ -1,9 +1,28 @@
 import axios from "axios";
-import type { CreateProject, Project } from "../types/project";
+import type { CreateProject, Project, UpdateProject } from "../types/project";
 
-export async function createProjectRequest(
-  data: CreateProject,
-): Promise<{ project: Project }> {
+export async function getProjects(): Promise<Project[]> {
+  const token = localStorage.getItem("jwt");
+  if (!token) throw new Error("No token");
+
+  try {
+    const res = await axios.get<Project[]>(
+      `${import.meta.env.VITE_API_URL}/api/projects`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return res.data;
+  } catch (err: any) {
+    throw new Error(err.response?.data?.error || "Failed to fetch projects");
+  }
+}
+
+export async function createProject(data: CreateProject): Promise<Project> {
   const token = localStorage.getItem("jwt");
   if (!token) throw new Error("No token");
 
@@ -21,25 +40,20 @@ export async function createProjectRequest(
   return res.data;
 }
 
-export async function getProjectsRequest(): Promise<Project[]> {
+export async function updateProject(data: UpdateProject): Promise<Project> {
   const token = localStorage.getItem("jwt");
   if (!token) throw new Error("No token");
 
-  try {
-    const res = await axios.get<Project[]>(
-      `${import.meta.env.VITE_API_URL}/api/projects`,
-      {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+  const res = await axios.patch(
+    `${import.meta.env.VITE_API_URL}/api/projects/${data.id}`,
+    { project: data },
+    {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    );
+    },
+  );
 
-    console.log(res.data);
-
-    return res.data;
-  } catch (err: any) {
-    throw new Error(err.response?.data?.error || "Failed to fetch projects");
-  }
+  return res.data;
 }
