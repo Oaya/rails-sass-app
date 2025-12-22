@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   namespace :api do
     devise_for :users,
       defaults: { format: :json },
@@ -10,7 +11,17 @@ Rails.application.routes.draw do
         invitations: "api/users/invitations"
       }
 
-    resources :projects, only: [:create, :index, :show, :update, :destroy]
+    resources :projects, only: [:create, :index, :show, :update, :destroy] do
+      resources :resources, only: [:create, :index]
+    end
+
+    resources :resources, only: [:show, :destroy] do
+      member do
+        post :complete
+        get  :download_url
+      end
+    end
+
 
     get "me", to: "users#me"
     get "plans", to: "plans#index"

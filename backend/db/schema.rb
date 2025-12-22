@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_19_225701) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_22_221200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,22 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_19_225701) do
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_projects_on_created_by_id"
     t.index ["tenant_id"], name: "index_projects_on_tenant_id"
+  end
+
+  create_table "resources", force: :cascade do |t|
+    t.bigint "byte_size"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "project_id", null: false
+    t.string "s3_key"
+    t.string "status"
+    t.bigint "tenant_id", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_resources_on_created_by_id"
+    t.index ["project_id"], name: "index_resources_on_project_id"
+    t.index ["tenant_id"], name: "index_resources_on_tenant_id"
   end
 
   create_table "tenants", force: :cascade do |t|
@@ -79,6 +95,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_19_225701) do
 
   add_foreign_key "projects", "tenants"
   add_foreign_key "projects", "users", column: "created_by_id"
+  add_foreign_key "resources", "projects"
+  add_foreign_key "resources", "tenants"
+  add_foreign_key "resources", "users", column: "created_by_id"
   add_foreign_key "tenants", "plans"
   add_foreign_key "users", "tenants"
 end

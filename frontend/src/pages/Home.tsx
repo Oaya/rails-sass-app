@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useProjectData } from "../hooks/useProjectData";
 
 import { BsJournalPlus } from "react-icons/bs";
-import ProjectModal from "../components/ProjectModal";
+import ProjectModal from "../components/project/ProjectModal";
 import type { CreateProject, Project, UpdateProject } from "../types/project";
 
 const Home = () => {

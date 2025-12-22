@@ -4,9 +4,13 @@ import Popup from "reactjs-popup";
 import DatePicker from "react-datepicker";
 import { AiOutlineClose } from "react-icons/ai";
 
-import type { CreateProject, Project, UpdateProject } from "../types/project";
-import Toast from "./ui/Toast";
-import InputField from "./ui/inputField";
+import type {
+  CreateProject,
+  Project,
+  UpdateProject,
+} from "../../types/project";
+import Toast from "../ui/Toast";
+import InputField from "../ui/inputField";
 
 type Props = {
   open: boolean;
