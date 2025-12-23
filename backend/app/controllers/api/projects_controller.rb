@@ -83,7 +83,7 @@ module Api
     private
 
     def project_params
-      params.require(:project).permit(:title, :details, :expected_completion_date)
+      params.permit(:title, :details, :expected_completion_date)
     end
 
 

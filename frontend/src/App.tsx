@@ -14,6 +14,7 @@ import AcceptInvite from "./pages/AcceptInvite";
 import RequireAuth from "./components/RequireAuth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProjectDetailsView from "./components/project/ProjectDetailsView";
+import SignupCheckoutPage from "./pages/SignupCheckout";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ function App() {
           <Route path="/" element={<Root />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="/signup/checkout" element={<SignupCheckoutPage />} />
           <Route path="email-confirmed" element={<EmailConfirmed />} />
           <Route path="forget-password" element={<ForgetPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />

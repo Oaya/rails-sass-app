@@ -20,22 +20,24 @@ plans = [
   },
   {
     name: "standard",
-    price: 20,
+    price: 20, 
+    stripe_price_id: "price_1ShZtGAkHFmsFUgnHjrSY5Uj",
     features: {
       project_number: "50",
-      member: "50"
+      member: "50",
     }
   },
   {
     name: "premium",
     price: 50,
+    stripe_price_id: "price_1ShZthAkHFmsFUgnUYLfQRNZ",
     features: {
       project_number: "unlimited",
-      member: "unlimited"
+      member: "unlimited",
     }
   }
 ]
 
 plans.each do | plan|
-  Plan.create!(name: plan[:name], price: plan[:price], features: plan[:features])
+  Plan.create!(name: plan[:name], price: plan[:price],  stripe_price_id: plan[:stripe_price_id], features: plan[:features])
 end

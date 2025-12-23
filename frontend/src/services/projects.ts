@@ -33,7 +33,7 @@ export async function createProject(data: CreateProject): Promise<Project> {
 
   const res = await axios.post(
     `${import.meta.env.VITE_API_URL}/api/projects`,
-    { project: data },
+    data,
     {
       headers: {
         Accept: "application/json",
@@ -51,7 +51,7 @@ export async function updateProject(data: UpdateProject): Promise<Project> {
 
   const res = await axios.patch(
     `${import.meta.env.VITE_API_URL}/api/projects/${data.id}`,
-    { project: data },
+    data,
     {
       headers: {
         Accept: "application/json",

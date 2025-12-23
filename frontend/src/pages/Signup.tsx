@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+
 import { useAuth } from "../contexts/AuthContext";
 import type { SignupUser } from "../types/auth";
-import { NavLink } from "react-router-dom";
 import InputField from "../components/ui/inputField";
 import Toast from "../components/ui/Toast";
+import { startCheckout } from "../services/payment";
 
 const Signup = () => {
   const { signup } = useAuth();
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -21,6 +24,8 @@ const Signup = () => {
 
     const data = Object.fromEntries(formData.entries());
 
+    const plan = data.plan;
+
     if (data.password !== data.confirm_password) {
       setError("Password and Confirm password should match");
       setIsSubmitting(false);
@@ -28,14 +33,23 @@ const Signup = () => {
     }
 
     try {
-      const res = await signup(data as SignupUser);
-
-      if (res.message) {
-        setMessage(res.message);
-        // setTimeout(() => {
-        //   navigate("/login");
-        // }, 2000);
+      if (plan === "free") {
+        const res = await signup(data as SignupUser);
+        if (res.message) {
+          setMessage(res.message);
+          // setTimeout(() => {
+          //   navigate("/login");
+          // }, 2000);
+          return;
+        }
       }
+
+      //Paid plans -> stripe checkout
+
+      const { client_secret } = await startCheckout(data as SignupUser);
+      navigate("/signup/checkout", { state: { client_secret } });
+
+      console.log(client_secret);
     } catch (err) {
       setError((err as Error).message);
       setIsSubmitting(false);
@@ -116,7 +130,7 @@ const Signup = () => {
               className="mb-2 w-full rounded border border-gray-300 bg-white p-3 px-6 py-3 shadow-md"
             >
               <option value="free">Free</option>
-              <option value="premium">Standard</option>
+              <option value="standard">Standard</option>
               <option value="premium">Premium</option>
             </select>
           </div>

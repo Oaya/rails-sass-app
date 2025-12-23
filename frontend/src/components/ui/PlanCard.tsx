@@ -47,7 +47,7 @@ function PlanCard({ plan }: { plan: Plan }) {
         </ul>
 
         <p className="text-xl font-bold">
-          Price: {plan.price === "0" ? "Free" : `$ ${plan.price}`}
+          Price: {Number(plan.price) === 0 ? "Free" : `$${plan.price} / month`}
         </p>
         <NavButton to="/signup" text="Sign up" />
       </div>

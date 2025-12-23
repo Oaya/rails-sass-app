@@ -1,0 +1,430 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/users/confirmation":
+    get:
+      summary: Api Confirmations#show
+      tags:
+      - Api Confirmations
+      responses:
+        '200':
+          description: auto
+  "/api/payments/checkout":
+    post:
+      summary: Api Payments#checkout
+      tags:
+      - Api Payments
+      responses:
+        '201':
+          description: auto
+  "/api/plans":
+    get:
+      summary: Api Plans#index
+      tags:
+      - Api Plans
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlansResponse"
+  "/api/projects":
+    get:
+      summary: Api Projects#index
+      tags:
+      - Api Projects
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ProjectsResponse"
+    post:
+      summary: Api Projects#create
+      tags:
+      - Api Projects
+      parameters: []
+      responses:
+        '201':
+          description: auto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ProjectUpdateRequest"
+  "/api/projects/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Api Projects#show
+      tags:
+      - Api Projects
+      responses:
+        '200':
+          description: auto
+    patch:
+      summary: Api Projects#update
+      tags:
+      - Api Projects
+      parameters: []
+      responses:
+        '200':
+          description: auto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ProjectCreateRequest"
+    delete:
+      summary: Api Projects#destroy
+      tags:
+      - Api Projects
+      responses:
+        '204':
+          description: auto
+  "/api/projects/{project_id}/resources":
+    parameters:
+    - name: project_id
+      in: path
+      description: project_id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Api Resources#index
+      tags:
+      - Api Resources
+      responses:
+        '200':
+          description: auto
+    post:
+      summary: Api Resources#create
+      tags:
+      - Api Resources
+      responses:
+        '201':
+          description: auto
+  "/api/resources/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: Api Resources#destroy
+      tags:
+      - Api Resources
+      responses:
+        '204':
+          description: auto
+    get:
+      summary: Api Resources#show
+      tags:
+      - Api Resources
+      responses:
+        '200':
+          description: auto
+  "/api/resources/{id}/complete":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    post:
+      summary: Api Resources#complete
+      tags:
+      - Api Resources
+      responses:
+        '201':
+          description: auto
+  "/api/resources/{id}/download_url":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Api Resources#download_url
+      tags:
+      - Api Resources
+      responses:
+        '200':
+          description: auto
+  "/api/me":
+    get:
+      summary: Api Users#me
+      tags:
+      - Api Users
+      responses:
+        '200':
+          description: auto
+  "/api/users/confirm_signin":
+    post:
+      summary: Api Users Confirmations#confirm_signin
+      tags:
+      - Api Users Confirmations
+      responses:
+        '201':
+          description: auto
+  "/api/users/invitation":
+    patch:
+      summary: Api Users Invitations#update
+      tags:
+      - Api Users Invitations
+      responses:
+        '200':
+          description: auto
+    post:
+      summary: Api Users Invitations#create
+      tags:
+      - Api Users Invitations
+      responses:
+        '201':
+          description: auto
+    put:
+      summary: Api Users Invitations#update
+      tags:
+      - Api Users Invitations
+      responses:
+        '200':
+          description: auto
+  "/api/users/invitation/accept":
+    get:
+      summary: Api Users Invitations#edit
+      tags:
+      - Api Users Invitations
+      responses:
+        '200':
+          description: auto
+  "/api/users/invitation/new":
+    get:
+      summary: Api Users Invitations#new
+      tags:
+      - Api Users Invitations
+      responses:
+        '200':
+          description: auto
+  "/api/users/invitation/remove":
+    get:
+      summary: Api Users Invitations#destroy
+      tags:
+      - Api Users Invitations
+      responses:
+        '200':
+          description: auto
+  "/api/users/password":
+    patch:
+      summary: Api Users Passwords#update
+      tags:
+      - Api Users Passwords
+      responses:
+        '200':
+          description: auto
+    post:
+      summary: Api Users Passwords#create
+      tags:
+      - Api Users Passwords
+      responses:
+        '201':
+          description: auto
+    put:
+      summary: Api Users Passwords#update
+      tags:
+      - Api Users Passwords
+      responses:
+        '200':
+          description: auto
+  "/api/users/password/edit":
+    get:
+      summary: Api Users Passwords#edit
+      tags:
+      - Api Users Passwords
+      responses:
+        '200':
+          description: auto
+  "/api/users/password/new":
+    get:
+      summary: Api Users Passwords#new
+      tags:
+      - Api Users Passwords
+      responses:
+        '200':
+          description: auto
+  "/api/users":
+    delete:
+      summary: Api Users Registrations#destroy
+      tags:
+      - Api Users Registrations
+      responses:
+        '204':
+          description: auto
+    patch:
+      summary: Api Users Registrations#update
+      tags:
+      - Api Users Registrations
+      responses:
+        '200':
+          description: auto
+    post:
+      summary: Api Users Registrations#create
+      tags:
+      - Api Users Registrations
+      responses:
+        '201':
+          description: auto
+    put:
+      summary: Api Users Registrations#update
+      tags:
+      - Api Users Registrations
+      responses:
+        '200':
+          description: auto
+  "/api/users/cancel":
+    get:
+      summary: Api Users Registrations#cancel
+      tags:
+      - Api Users Registrations
+      responses:
+        '200':
+          description: auto
+  "/api/users/edit":
+    get:
+      summary: Api Users Registrations#edit
+      tags:
+      - Api Users Registrations
+      responses:
+        '200':
+          description: auto
+  "/api/users/sign_up":
+    get:
+      summary: Api Users Registrations#new
+      tags:
+      - Api Users Registrations
+      responses:
+        '200':
+          description: auto
+  "/api/users/sign_in":
+    get:
+      summary: Api Users Sessions#new
+      tags:
+      - Api Users Sessions
+      responses:
+        '200':
+          description: auto
+    post:
+      summary: Api Users Sessions#create
+      tags:
+      - Api Users Sessions
+      responses:
+        '201':
+          description: auto
+  "/api/users/sign_out":
+    delete:
+      summary: Api Users Sessions#destroy
+      tags:
+      - Api Users Sessions
+      responses:
+        '204':
+          description: auto
+servers:
+- url: http://localhost:3000
+components:
+  schemas:
+    Plan:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+        features:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            member: '10'
+            project_number: '10'
+      required:
+      - id
+      - name
+      - price
+      - features
+    PlansResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Plan"
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        details:
+          type: string
+          nullable: true
+        expected_completion_date:
+          type: string
+          format: date
+          nullable: true
+        created_by:
+          type: object
+          properties:
+            first_name:
+              type: string
+            last_name:
+              type: string
+      required:
+      - id
+      - title
+      - created_by
+    ProjectsResponse:
+      type: array
+      items:
+        "$ref": "#/components/schemas/Project"
+    ProjectCreateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        details:
+          type: string
+          nullable: true
+        expected_completion_date:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - title
+    ProjectUpdateRequest:
+      type: object
+      properties:
+        type: object
+        properties:
+          title:
+            type: string
+          details:
+            type: string
+            nullable: true
+          expected_completion_date:
+            type: string
+            format: date
+            nullable: true

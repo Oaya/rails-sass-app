@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
 
   namespace :api do
     devise_for :users,
@@ -27,5 +29,7 @@ Rails.application.routes.draw do
     get "plans", to: "plans#index"
     post "users/confirm_signin", to: "users/confirmations#confirm_signin"
     patch "users/password", to: "users/passwords#update"
+    post "payments/checkout", to: "payments#checkout"
+
   end
 end
