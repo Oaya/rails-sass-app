@@ -61,6 +61,7 @@ class ApplicationController < ActionController::API
     warden.authenticate!(scope: devise_scope)
   rescue Warden::NotAuthenticated
     render_error("Unauthorized", :unauthorized)
+    throw(:abort)
   end
 
   # after authenticate_user! it set the current_user
@@ -71,8 +72,13 @@ class ApplicationController < ActionController::API
   def set_current_user_tenant_plan
     Current.user = current_user
     Current.tenant = current_user&.tenant
-    Current.plan = current_user&.tenant.plan
+    Current.plan = Current.tenant&.plan
+
+    return if Current.tenant.present?
+
+    render_error("Tenant required", :forbidden)
   end
+
 
   def render_error(message, status = :unprocessable_entity)
     render json: { error: message }, status: status

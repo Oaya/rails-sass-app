@@ -1,12 +1,8 @@
-# app/controllers/api/resources_controller.rb
+
 require "aws-sdk-s3"
 
 module Api
   class ResourcesController < ApplicationController
-    before_action :authenticate_user!
-
-
-
 
     # POST /api/projects/:project_id/resources
     def create
@@ -74,11 +70,14 @@ module Api
 
     private
 
-    def s3_bucket = ENV.fetch("S3_BUCKET")
-    def s3_region = ENV.fetch("AWS_REGION")
+    def s3_bucket = Rails.application.credentials.dig(:aws, :s3_bucket)
 
     def s3_client
-      @s3_client ||= Aws::S3::Client.new(region: s3_region)
+      @s3_client ||= Aws::S3::Client.new(
+        region: Rails.application.credentials.dig(:aws, :region),
+        access_key_id:  Rails.application.credentials.dig(:aws, :access_key_id),
+        secret_access_key: Rails.application.credentials.dig(:aws, :secret_access_key)
+      )
     end
 
     def presigner

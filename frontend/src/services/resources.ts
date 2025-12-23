@@ -1,14 +1,20 @@
 import axios from "axios";
+import type { CreateResource } from "../types/resource";
 
 export async function initialResourceUpload({
+  projectId,
   title,
   file,
 }: {
+  projectId: string;
   title: string;
   file: File;
 }) {
+  const token = localStorage.getItem("jwt");
+  if (!token) throw new Error("No token");
+
   const res = await axios.post(
-    `${import.meta.env.VITE_SERVER_URL}/api/resources`,
+    `${import.meta.env.VITE_API_URL}/api/projects/${projectId}/resources`,
     {
       title,
       filename: file.name,
@@ -16,13 +22,14 @@ export async function initialResourceUpload({
       byte_size: file.size,
     },
     {
-      headers: { Authorization: `Bearer ${localStorage.token}` },
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     },
   );
 
-  console.log(res.data);
-
-  return res.data; // { resource, put_url }
+  return res.data;
 }
 
 export async function uploadFile({
@@ -48,32 +55,48 @@ export async function uploadFile({
 }
 
 export async function completeResource(resourceId: number) {
+  const token = localStorage.getItem("jwt");
+  if (!token) throw new Error("No token");
+
   await axios.post(
-    `${import.meta.env.VITE_SERVER_URL}/api/resources/${resourceId}/complete`,
-    {},
-    { headers: { Authorization: `Bearer ${localStorage.token}` } },
+    `${import.meta.env.VITE_API_URL}/api/resources/${resourceId}/complete`,
+    {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
   );
 }
 
-export async function uploadResource({
-  title,
-  file,
-  onProgress,
-}: {
-  title: string;
-  file: File;
-  onProgress: (p: number) => void;
-}) {
-  const { resource, put_url } = await initialResourceUpload({ title, file });
-  await uploadFile({ putUrl: put_url, file, onProgress });
-  await completeResource(resource.id);
-  return resource.id;
+export async function uploadResource(data: CreateResource) {
+  const { id, put_url } = await initialResourceUpload({
+    projectId: data.projectId,
+    title: data.title,
+    file: data.file,
+  });
+
+  await uploadFile({
+    putUrl: put_url,
+    file: data.file,
+    onProgress: data.onProgress,
+  });
+  await completeResource(id);
+  return id;
 }
 
 export async function getResourceDownloadUrl(resourceId: number) {
+  const token = localStorage.getItem("jwt");
+  if (!token) throw new Error("No token");
+
   const res = await axios.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/resources/${resourceId}/download_url`,
-    { headers: { Authorization: `Bearer ${localStorage.token}` } },
+    `${import.meta.env.VITE_API_URL}/api/resources/${resourceId}/download_url`,
+    {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
   );
 
   return res.data.url;

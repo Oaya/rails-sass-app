@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Toast from "../components/ui/Toast";
 import InputField from "../components/ui/inputField";
@@ -13,6 +13,7 @@ const AcceptInvite = () => {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const tenantName = searchParams.get("tenant");
+  const navigate = useNavigate();
 
   const handleCreatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,6 +47,9 @@ const AcceptInvite = () => {
 
       if (res.data.message) {
         setMessage(res.data.message);
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       }
 
       console.log(res);
