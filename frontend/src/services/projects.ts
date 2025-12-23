@@ -1,5 +1,10 @@
 import axios from "axios";
-import type { CreateProject, Project, UpdateProject } from "../types/project";
+import type {
+  CreateProject,
+  Project,
+  ProjectWithResources,
+  UpdateProject,
+} from "../types/project";
 
 export async function getProjects(): Promise<Project[]> {
   const token = localStorage.getItem("jwt");
@@ -73,4 +78,29 @@ export async function deleteProject(id: number) {
   );
 
   return res.data;
+}
+
+export async function getProjectAndResourcesById(
+  id: string,
+): Promise<ProjectWithResources> {
+  const token = localStorage.getItem("jwt");
+  if (!token) throw new Error("No token");
+
+  try {
+    const res = await axios.get<ProjectWithResources>(
+      `${import.meta.env.VITE_API_URL}/api/projects/${id}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    console.log(res.data);
+
+    return res.data;
+  } catch (err: any) {
+    throw new Error(err.response?.data?.error || "Failed to fetch projects");
+  }
 }

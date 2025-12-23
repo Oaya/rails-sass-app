@@ -5,6 +5,9 @@ module Api
   class ResourcesController < ApplicationController
     before_action :authenticate_user!
 
+
+
+
     # POST /api/projects/:project_id/resources
     def create
       project = Current.tenant.projects.find(params[:project_id])
@@ -62,7 +65,7 @@ module Api
     end
 
     def download_url
-      resource = current_user.tenant.resources.find(params[:id])
+      resource = Current.tenant.resources.find(params[:id])
 
       url = presigned_get_url(key: resource.s3_key)
 

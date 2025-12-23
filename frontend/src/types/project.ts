@@ -21,3 +21,9 @@ export type UpdateProject = {
   details?: string;
   expected_completion_date?: string;
 };
+
+export type ProjectWithResources = Project &
+  {
+    id: number;
+    title: string;
+  }[];

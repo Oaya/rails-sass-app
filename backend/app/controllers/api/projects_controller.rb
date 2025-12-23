@@ -12,6 +12,14 @@ module Api
       ), status: :ok
     end
 
+    # GET /api/projects/:id
+    def show
+      pp params
+      project = Current.tenant.projects.includes(:resources).find(params[:id])
+
+      render json: project, include: :resources
+    end
+
 
     def create
       # check the tenant's plan. if it's over the features project_number then we can't create.

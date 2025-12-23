@@ -1,11 +1,12 @@
 import { useState } from "react";
 import Toast from "../components/ui/Toast";
 import { useAuth } from "../contexts/AuthContext";
-import { useProjectData } from "../hooks/useProjectData";
+import { useProjectsData } from "../hooks/useProjectsData";
 
 import { BsJournalPlus } from "react-icons/bs";
 import ProjectModal from "../components/project/ProjectModal";
 import type { CreateProject, Project, UpdateProject } from "../types/project";
+import { NavLink } from "react-router-dom";
 
 const Home = () => {
   const { user } = useAuth();
@@ -16,7 +17,7 @@ const Home = () => {
     addProjectMutation,
     updateProjectMutation,
     removeProjectMutation,
-  } = useProjectData();
+  } = useProjectsData();
 
   const [open, setOpen] = useState(false);
   const [project, setProject] = useState<Project | null>();
@@ -112,7 +113,9 @@ const Home = () => {
                     className="odd:bg-gray-100 even:bg-white"
                   >
                     <td className="border border-gray-200 px-6 py-4">
-                      {project.title}
+                      <NavLink to={`/project/${project.id}`}>
+                        <span className="text-blue-700"> {project.title}</span>
+                      </NavLink>
                     </td>
                     <td className="truncate border border-gray-200 px-6 py-4">
                       {project.details}

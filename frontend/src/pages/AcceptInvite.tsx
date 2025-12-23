@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import Toast from "../components/ui/Toast";
 import InputField from "../components/ui/inputField";
@@ -9,7 +9,6 @@ import { useAuth } from "../contexts/AuthContext";
 const AcceptInvite = () => {
   const [searchParams] = useSearchParams();
   const { acceptInvite } = useAuth();
-  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -47,7 +46,6 @@ const AcceptInvite = () => {
 
       if (res.data.message) {
         setMessage(res.data.message);
-        navigate("/");
       }
 
       console.log(res);

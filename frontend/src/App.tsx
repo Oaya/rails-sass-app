@@ -13,6 +13,7 @@ import AddMember from "./pages/AddMember";
 import AcceptInvite from "./pages/AcceptInvite";
 import RequireAuth from "./components/RequireAuth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ProjectDetailsView from "./components/project/ProjectDetailsView";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,14 @@ function App() {
             element={
               <RequireAuth>
                 <AddMember />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="project/:id"
+            element={
+              <RequireAuth>
+                <ProjectDetailsView />
               </RequireAuth>
             }
           />
